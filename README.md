@@ -1,34 +1,69 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<p align="center"><img alt="Venture" src="https://github.com/gisabernardess/venture/blob/main/web/public/images/logo-black.svg"></p>
+<p align="center">Organize your games. Play them with anyone.</p>
 
-## Getting Started
+<p align="center">
+  <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/gisabernardess/venture">
+  <img alt="GitHub top language" src="https://img.shields.io/github/languages/top/gisabernardess/venture">
+  <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/gisabernardess/venture">
+  <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/gisabernardess/venture">
+  <img alt="Github license" src="https://img.shields.io/github/license/gisabernardess/venture">
+</p>
 
-First, run the development server:
+<p align="center"><img alt="Venture" src=""></p>
+
+<p align="center">
+  <a href="#-project">Project</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-technologies">Technologies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-how-to-use">How To Use</a>
+</p>
+
+## 💬 Project
+
+Final project of the Graduate Course in Full Stack Web Development at the Pontifical Catholic University of Minas Gerais as a requirement for obtaining the graduate degree.
+
+The search for innovation is a permanent challenge for companies that want to gain a good place in the market. In this sense, finding ways to promote discussion and the development of innovative solutions is one of the main activities that contribute to this objective. This is where Hackathons events comes in.
+
+Hackathons events are successful in companies from different sectors, including in the current company I am part of, with the aim of exercising creativity, stimulating brainstorming, creating new projects and training employees. In one of these events, an online tabletop RPG game was developed, however it was not completely finished, lacking to create the web interface for the management of players.
+
+Finally, the proposal for this project is the development of the web application with player management, completing the online tabletop RPG game project developed previously.
+
+## 🚀 Technologies
+
+Project developed with the main following technologies:
+
+- [Create Next App](https://nextjs.org/docs/api-reference/create-next-app)
+- [React](https://reactjs.org)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Chakra UI](https://chakra-ui.com/)
+
+## ℹ️ How To Use
+
+To clone and run this application, you'll need [Git](https://git-scm.com) and [Yarn](https://legacy.yarnpkg.com). From your command line:
 
 ```bash
-npm run dev
-# or
-yarn dev
+# Clone the repository
+$ git clone https://github.com/gisabernardess/venture.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### :desktop_computer: Web
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+```bash
+# Go into the repository
+$ cd venture/web
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+# Install dependencies
+$ yarn
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+# Run the development server
+$ yarn dev
 
-## Learn More
+# Navigate to http://localhost:3000
+# The app will automatically reload if you change any of the source files.
+```
 
-To learn more about Next.js, take a look at the following resources:
+### :gear: Server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+```bash
+# Go into the repository
+$ cd venture/server
+```
