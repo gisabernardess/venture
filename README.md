@@ -14,7 +14,9 @@
 <p align="center">
   <a href="#-project">Project</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-technologies">Technologies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
-  <a href="#-how-to-use">How To Use</a>
+  <a href="#-layout">Layout</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-how-to-use">How To Use</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-license">License</a>&nbsp;
 </p>
 
 ## 💬 Project
@@ -36,6 +38,11 @@ Project developed with the main following technologies:
 - [TypeScript](https://www.typescriptlang.org/)
 - [Chakra UI](https://chakra-ui.com/)
 
+## 🔖 Layout
+
+You can view the layout of the project in the <a href="https://www.figma.com/file/n0HOpITD6ktjuBjSr5R8Eb/Venture?node-id=0%3A1" rel="nofollow">web</a> version. You need to have a <a href="https://www.figma.com/" rel="nofollow">Figma</a> account to access it.
+
+
 ## ℹ️ How To Use
 
 To clone and run this application, you'll need [Git](https://git-scm.com) and [Yarn](https://legacy.yarnpkg.com). From your command line:
@@ -45,7 +52,7 @@ To clone and run this application, you'll need [Git](https://git-scm.com) and [Y
 $ git clone https://github.com/gisabernardess/venture.git
 ```
 
-### :desktop_computer: Web
+### 🖥️ Web
 
 ```bash
 # Go into the repository
@@ -61,9 +68,17 @@ $ yarn dev
 # The app will automatically reload if you change any of the source files.
 ```
 
-### :gear: Server
+### ⚙️ Server
 
 ```bash
 # Go into the repository
 $ cd venture/server
 ```
+
+## 📝 License
+
+This project is under the MIT license. See the <a href="https://github.com/gisabernardess/venture/blob/main/LICENSE" rel="nofollow">LICENSE</a> for more information.
+
+---
+
+Made with ♥ by Gisele Silva 👋 <a href="https://www.linkedin.com/in/gisabernardess/" rel="nofollow">Get in touch!</a>
