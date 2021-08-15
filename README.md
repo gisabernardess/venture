@@ -81,4 +81,4 @@ This project is under the MIT license. See the <a href="https://github.com/gisab
 
 ---
 
-Made with ♥ by Gisele Silva 👋 <a href="https://www.linkedin.com/in/gisabernardess/" rel="nofollow">Get in touch!</a>
+<p align="center">Made with ♥ by Gisele Silva 👋 <a href="https://www.linkedin.com/in/gisabernardess/" rel="nofollow">Get in touch!</a></p>
