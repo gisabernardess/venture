@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react';
-import { Topbar, Sidebar } from '../components';
+import { Sidebar, Topbar } from '../../components';
 
-export default function Dashboard() {
+export default function Profile() {
   return (
     <Flex direction="column" h="100vh">
       <Topbar />
@@ -15,7 +15,9 @@ export default function Dashboard() {
           mx="auto"
           px="6"
           border="1px solid yellow"
-        ></Flex>
+        >
+          Profile
+        </Flex>
       </Flex>
     </Flex>
   );

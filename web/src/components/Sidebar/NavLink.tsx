@@ -1,10 +1,4 @@
-import {
-  Link as ChakraLink,
-  Icon,
-  LinkProps,
-  Box,
-  Flex,
-} from '@chakra-ui/react';
+import { Link as ChakraLink, Icon, LinkProps, Flex } from '@chakra-ui/react';
 import { ElementType } from 'react';
 
 import { ActiveLink } from '../ActiveLink';
@@ -26,7 +20,12 @@ export function NavLink({ icon, href, ...rest }: NavLinkProps) {
           borderRadius="4"
           _hover={{ bg: 'blue.400' }}
         >
-          <Icon as={icon} fontSize="25" />
+          <Icon
+            as={icon}
+            fontSize="25"
+            color="blue.400"
+            _hover={{ color: 'white' }}
+          />
         </Flex>
       </ChakraLink>
     </ActiveLink>

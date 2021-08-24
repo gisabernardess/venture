@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react';
-import { Topbar, Sidebar } from '../components';
+import { Topbar, Sidebar } from '../../components';
 
-export default function Dashboard() {
+export default function Permissions() {
   return (
     <Flex direction="column" h="100vh">
       <Topbar />
@@ -15,7 +15,9 @@ export default function Dashboard() {
           mx="auto"
           px="6"
           border="1px solid yellow"
-        ></Flex>
+        >
+          Permissions
+        </Flex>
       </Flex>
     </Flex>
   );

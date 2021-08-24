@@ -7,7 +7,7 @@ import { useSidebarDrawer } from '../../contexts/SidebarDrawerContext';
 import { Notifications } from './Notifications';
 import { Profile } from './Profile';
 
-export function Header() {
+export function Topbar() {
   const { onOpen } = useSidebarDrawer();
 
   const isWideVersion = useBreakpointValue({
@@ -20,11 +20,12 @@ export function Header() {
       as="header"
       w="100%"
       h="20"
-      maxW={1480}
       mx="auto"
       px="6"
       align="center"
       bg="blue.800"
+      borderBottomWidth="1px"
+      borderBottomColor="blue.700"
     >
       {!isWideVersion && (
         <IconButton
