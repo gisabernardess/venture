@@ -1,5 +1,6 @@
 import NextLink from 'next/link';
-import { Button, Flex, Image } from '@chakra-ui/react';
+import { Button, Flex } from '@chakra-ui/react';
+import { Logo } from './Logo';
 
 export function Header() {
   return (
@@ -15,7 +16,7 @@ export function Header() {
       borderBottomColor="blue.800"
     >
       <Flex w="100%" maxW={1200} h="100%" mx="auto" align="center">
-        <Image src="images/logo.svg" alt="Venture" />
+        <Logo />
         <Flex w="15%" ml="auto" justify="space-between">
           <NextLink href="/signin" passHref>
             <Button as="a" size="md" fontSize="sm" colorScheme="blue">
