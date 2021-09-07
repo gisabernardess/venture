@@ -1,7 +1,7 @@
 import { Image } from '@chakra-ui/react';
 
 interface LogoProps {
-  dark: boolean;
+  dark?: boolean;
 }
 
 export function Logo({ dark = false }: LogoProps) {
