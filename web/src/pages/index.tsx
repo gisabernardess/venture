@@ -19,7 +19,7 @@ export default function Home() {
     <Flex direction="column" minH="100vh">
       <Header />
       <Flex as="main" direction="column" w="100%" maxW={1200} mx="auto">
-        <Flex w="100%" h="80vh">
+        <Flex w="100%" h="80vh" pos="relative">
           <Box my="15%">
             <Stack spacing={2}>
               <Heading as="h1">
@@ -46,7 +46,7 @@ export default function Home() {
               <Text as="b">Organize your games. Play them with anyone.</Text>
             </Stack>
           </Box>
-          <Box pos="absolute" top="20" right="28">
+          <Box pos="absolute" right="0">
             <Image src="images/avatar.png" alt="Venture" />
           </Box>
         </Flex>
