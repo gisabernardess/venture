@@ -15,6 +15,7 @@ export function BackButton({ href }: BackButtonProps) {
         color="gray.500"
         display="flex"
         mt="10"
+        _hover={{ color: 'gray.600' }}
       >
         back
       </Button>

@@ -11,6 +11,7 @@ export function GoogleButton({ label }: GoogleButtonProps) {
       color="gray.600"
       variant="outline"
       leftIcon={<Icon as={FcGoogle} fontSize="25" />}
+      _hover={{ bg: 'white' }}
     >
       {`${label} with Google`}
     </Button>

@@ -37,6 +37,8 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = (
           size="lg"
           type={isPassword && show ? 'text' : type}
           color="blue.900"
+          focusBorderColor="blue.400"
+          bg="white"
           ref={ref}
           {...rest}
         />
