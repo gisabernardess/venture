@@ -9,7 +9,7 @@
   <img alt="Github license" src="https://img.shields.io/github/license/gisabernardess/venture">
 </p>
 
-<p align="center"><img alt="Venture" src=""></p>
+<p align="center"><img alt="Venture" src="https://github.com/gisabernardess/venture/blob/main/.github/cover.png"></p>
 
 <p align="center">
   <a href="#-project">Project</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
