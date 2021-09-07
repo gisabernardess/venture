@@ -1,10 +1,15 @@
-import { Flex, Button, Stack } from '@chakra-ui/react';
+import { Flex, Button, Stack, Icon } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 
-import { Input } from '../components/Form';
-import { Container } from '../components/Logging';
+import {
+  Input,
+  Container,
+  Divider,
+  GoogleButton,
+  TextLink,
+} from '../components';
 
 type SignInFormData = {
   email: string;
@@ -12,8 +17,8 @@ type SignInFormData = {
 };
 
 const signInFormSchema = yup.object().shape({
-  email: yup.string().required('E-mail é obrigatório').email('E-mail inválido'),
-  password: yup.string().required('Senha é obrigatória'),
+  email: yup.string().required('Email is required').email('Invalid email'),
+  password: yup.string().required('Password is required'),
 });
 
 export default function SignIn() {
@@ -31,40 +36,43 @@ export default function SignIn() {
 
   return (
     <Container image="game-signin">
-      <Flex
-        as="form"
-        w="100%"
-        maxW={360}
-        p="8"
-        flexDir="column"
-        border="1px solid red"
-        onSubmit={handleSubmit(handleSignIn)}
-      >
-        <Stack spacing="4">
-          <Input
-            name="email"
-            type="email"
-            label="E-mail"
-            error={errors.email}
-            {...register('email')}
-          />
-          <Input
-            name="password"
-            type="password"
-            label="Senha"
-            error={errors.password}
-            {...register('password')}
-          />
-        </Stack>
-        <Button
-          type="submit"
-          mt="6"
-          colorScheme="pink"
-          size="lg"
-          isLoading={isSubmitting}
+      <Flex w="100%" maxW={360} flexDir="column" p="8">
+        <GoogleButton label="Sign In" />
+        <Divider />
+        <Flex
+          as="form"
+          w="100%"
+          maxW={360}
+          flexDir="column"
+          onSubmit={handleSubmit(handleSignIn)}
         >
-          Entrar
-        </Button>
+          <Stack spacing="4">
+            <Input
+              name="email"
+              type="email"
+              placeholder="email@domain.com"
+              error={errors.email}
+              {...register('email')}
+            />
+            <Input
+              name="password"
+              type="password"
+              placeholder="**********"
+              error={errors.password}
+              {...register('password')}
+            />
+          </Stack>
+          <Button
+            type="submit"
+            mt="6"
+            colorScheme="red"
+            size="lg"
+            isLoading={isSubmitting}
+          >
+            Log In
+          </Button>
+        </Flex>
+        <TextLink label="Forgot my password" href="/reset-password" />
       </Flex>
     </Container>
   );

@@ -7,17 +7,17 @@ type Icon = {
   fontSize?: string;
 };
 
-interface ButtonIconProps {
+interface IconButtonProps {
   variant?: string;
   href: string;
   icon: Icon;
 }
 
-export function ButtonIcon({
+export function IconButton({
   variant = 'unstyled',
   href,
   icon,
-}: ButtonIconProps) {
+}: IconButtonProps) {
   return (
     <Button as="a" variant={variant} href={href} target="_blank">
       <Icon

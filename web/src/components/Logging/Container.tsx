@@ -1,5 +1,6 @@
 import { Flex, Image } from '@chakra-ui/react';
 import React, { ReactElement } from 'react';
+import { BackButton } from '..';
 import { Logo } from '../Header/Logo';
 
 interface ContainerProps {
@@ -14,9 +15,10 @@ export function Container({ image, children }: ContainerProps) {
         <Image src={`images/${image}.png`} alt="Sign In" />
       </Flex>
       <Flex w="100%" h="100%" bg="gray.100" align="center" justify="center">
-        <Flex direction="column" align="center" border="1px solid green">
+        <Flex direction="column" align="center">
           <Logo dark />
           {children}
+          <BackButton />
         </Flex>
       </Flex>
     </Flex>

@@ -1,2 +1,4 @@
 export * from './Input';
-export * from './ButtonIcon';
+export * from './IconButton';
+export * from './GoogleButton';
+export * from './BackButton';

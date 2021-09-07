@@ -2,7 +2,7 @@ import { Text, Flex, HStack, Stack } from '@chakra-ui/react';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
 import { Logo } from '../Header/Logo';
-import { ButtonIcon } from '../Form/ButtonIcon';
+import { IconButton } from '../Form';
 
 import { config } from '../../config';
 
@@ -33,8 +33,8 @@ export function Footer() {
           <Text>© 2021 Gisele Bernardes da Silva</Text>
         </HStack>
         <HStack>
-          <ButtonIcon icon={{ icon: FaGithub }} href={config.projectUrl} />
-          <ButtonIcon icon={{ icon: FaLinkedin }} href={config.linkedInUrl} />
+          <IconButton icon={{ icon: FaGithub }} href={config.projectUrl} />
+          <IconButton icon={{ icon: FaLinkedin }} href={config.linkedInUrl} />
         </HStack>
       </Stack>
     </Flex>
