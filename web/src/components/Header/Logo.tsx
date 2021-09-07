@@ -6,12 +6,12 @@ interface LogoProps {
 
 export function Logo({ dark = false }: LogoProps) {
   return (
-    <Box mb="10">
+    <>
       {dark ? (
         <Image src="images/logo-black.svg" alt="Venture" />
       ) : (
         <Image src="images/logo.svg" alt="Venture" />
       )}
-    </Box>
+    </>
   );
 }
