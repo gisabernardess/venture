@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react';
-import { Sidebar, Topbar } from '../../components';
+import { Topbar, Sidebar } from '../../components';
 
-export default function Profile() {
+export default function Dashboard({ id }) {
   return (
     <Flex direction="column" h="100vh">
       <Topbar />
@@ -16,9 +16,15 @@ export default function Profile() {
           px="6"
           border="1px solid yellow"
         >
-          Profile
+          {`Dashboard ${id}`}
         </Flex>
       </Flex>
     </Flex>
   );
+}
+
+export async function getServerSideProps({ params }) {
+  return {
+    props: { id: params.id },
+  };
 }
