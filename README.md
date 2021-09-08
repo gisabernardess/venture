@@ -42,7 +42,6 @@ Project developed with the main following technologies:
 
 You can view the layout of the project in the <a href="https://www.figma.com/file/n0HOpITD6ktjuBjSr5R8Eb/Venture?node-id=0%3A1" rel="nofollow">web</a> version. You need to have a <a href="https://www.figma.com/" rel="nofollow">Figma</a> account to access it.
 
-
 ## ℹ️ How To Use
 
 To clone and run this application, you'll need [Git](https://git-scm.com) and [Yarn](https://legacy.yarnpkg.com). From your command line:
@@ -73,6 +72,9 @@ $ yarn dev
 ```bash
 # Go into the repository
 $ cd venture/server
+
+# Run the development server
+$ node ace serve --watch
 ```
 
 ## 📝 License
