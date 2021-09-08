@@ -75,10 +75,11 @@ export default function SignIn() {
             size="lg"
             isLoading={isSubmitting}
           >
-            Log In
+            Sign In
           </Button>
         </Flex>
         <TextLink label="Forgot my password" href="/reset-password" />
+        <TextLink label="Create a new account" href="/signup" />
       </Flex>
     </Container>
   );
