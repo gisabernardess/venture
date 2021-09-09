@@ -7,8 +7,16 @@ export default class UsersController {
     return await User.all();
   }
 
-  public async store({ request }: HttpContextContract) {
-    return "Handle user creation form request";
+  public async create({ request }: HttpContextContract) {
+    const { email, password } = request.only(["email", "password"]);
+
+    const user = await User.create({
+      email,
+      password,
+      role: "PLAYER",
+    });
+
+    return user;
   }
 
   public async show() {

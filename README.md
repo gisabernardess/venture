@@ -74,7 +74,7 @@ $ yarn dev
 $ cd venture/server
 
 # Run the development server
-$ node ace serve --watch
+$ yarn dev
 ```
 
 ## 📝 License
