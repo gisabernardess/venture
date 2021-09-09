@@ -7,6 +7,36 @@ export default class UsersController {
     return await User.all();
   }
 
+  /**
+   * @swagger
+   * /users:
+   *   post:
+   *     tags:
+   *       - User
+   *     summary: creates a new user
+   *     consumes:
+   *       - application/json
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - in: body
+   *         name: user
+   *         description: information to create a new user
+   *         schema:
+   *           type: object
+   *           required:
+   *             - email
+   *             - password
+   *           properties:
+   *             email:
+   *               type: string
+   *             password:
+   *               type: string
+   *               format: password
+   *     responses:
+   *       200:
+   *         description: user created
+   */
   public async create({ request }: HttpContextContract) {
     const { email, password } = request.only(["email", "password"]);
 
