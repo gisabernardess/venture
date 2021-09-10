@@ -17,8 +17,10 @@ import { BaseModel, beforeSave, column } from "@ioc:Adonis/Lucid/Orm";
  *          type: string
  *        name:
  *          type: string
+ *          example: Jane Doe
  *        email:
  *          type: string
+ *          example: email@domain.com
  *        password:
  *          type: string
  *          format: password
