@@ -1,7 +1,9 @@
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
+import { DateTime } from "luxon";
 
 import User from "App/Models/User";
-
+import CreateUserValidator from "App/Validators/CreateUserValidator";
+import UpdateUserValidator from "App/Validators/UpdateUserValidator";
 export default class UsersController {
   /**
    * @swagger
@@ -11,7 +13,7 @@ export default class UsersController {
    *       - user
    *     summary: list all users
    *     responses:
-   *       '200':
+   *       200:
    *         description: users listed
    */
   public async index() {
@@ -26,8 +28,10 @@ export default class UsersController {
    *       - user
    *     summary: creates a new user
    *     responses:
-   *       200:
+   *       201:
    *         description: user created
+   *       400:
+   *         description: validation fails
    *     requestBody:
    *       content:
    *         application/json:
@@ -43,18 +47,21 @@ export default class UsersController {
    *               password:
    *                 type: string
    *                 format: password
-   *                 example: 123456
    */
-  public async create({ request }: HttpContextContract) {
-    const { email, password } = request.only(["email", "password"]);
+  public async store({ request, response }: HttpContextContract) {
+    try {
+      const { email, password } = await request.validate(CreateUserValidator);
 
-    const user = await User.create({
-      email,
-      password,
-      role: "PLAYER",
-    });
+      const user = await User.create({
+        email,
+        password,
+        role: "PLAYER",
+      });
 
-    return user;
+      return response.status(201).send(user);
+    } catch (error) {
+      response.badRequest(error.messages);
+    }
   }
 
   /**
@@ -75,18 +82,17 @@ export default class UsersController {
    *           format: int64
    *     responses:
    *       200:
-   *         description: user created
+   *         description: user exists
    *         content:
    *           application/json:
    *             schema:
    *               $ref: "#/components/schemas/User"
-   *       400:
-   *         description: Invalid ID supplied
    *       404:
-   *         description: User not found
+   *         description: user not found
    */
-  public async show() {
-    return "Return a single user";
+  public async show({ request }: HttpContextContract) {
+    const { id } = request.params();
+    return await User.findOrFail(id);
   }
 
   /**
@@ -96,26 +102,34 @@ export default class UsersController {
    *     tags:
    *       - user
    *     summary: updates an existing user
-   *     description: this can only be done by the logged in user.
+   *     description: this can only be done by the logged user.
    *     produces:
    *       - application/json
    *     parameters:
    *       - name: id
    *         in: path
-   *         description: User object that needs to be added to the store
+   *         description: user object that needs to be updated
    *         required: true
    *         schema:
    *           $ref: #/components/schemas/User
    *     responses:
+   *       200:
+   *         description: user updated
    *       400:
-   *         description: Invalid ID supplied
+   *         description: validation fails
    *       404:
-   *         description: User not found
-   *       405:
-   *         description: Validation exception
+   *         description: user not found
    */
-  public async update() {
-    return "Handle user update form submission";
+  public async update({ request, response }: HttpContextContract) {
+    try {
+      const user = await request.validate(UpdateUserValidator);
+    } catch (error) {
+      response.badRequest(error.messages);
+    }
+    const { id } = request.params();
+    const user = await User.findOrFail(id);
+    await user.merge({ updatedAt: DateTime.local() }).save();
+    return user;
   }
 
   /**
@@ -145,6 +159,8 @@ export default class UsersController {
    *
    */
   public async destroy() {
+    const user = await User.findOrFail(1);
+    await user.delete();
     return "Delete user";
   }
 }
