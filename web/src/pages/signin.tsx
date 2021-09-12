@@ -1,5 +1,7 @@
 import { useRouter } from 'next/router';
-import { Flex, Button, Stack, Icon } from '@chakra-ui/react';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
+import { Flex, Button, Stack } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,12 +13,10 @@ import {
   GoogleButton,
   TextLink,
 } from '../components';
-import { isEmpty } from '../utils';
 
-type SignInFormData = {
-  email: string;
-  password: string;
-};
+import { User } from '../models/types';
+
+type SignInFormData = Pick<User, 'email' | 'password'>;
 
 const signInFormSchema = yup.object().shape({
   email: yup.string().required('Email is required').email('Invalid email'),
@@ -25,6 +25,7 @@ const signInFormSchema = yup.object().shape({
 
 export default function SignIn() {
   const router = useRouter();
+  const { signIn } = useContext(AuthContext);
 
   const {
     register,
@@ -35,9 +36,7 @@ export default function SignIn() {
   });
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
-    if (isEmpty(errors)) {
-      router.push(`/dashboard/1`);
-    }
+    await signIn(values);
   };
 
   return (
