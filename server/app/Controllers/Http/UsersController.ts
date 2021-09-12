@@ -62,10 +62,34 @@ export default class UsersController {
    *     parameters:
    *       - name: id
    *         in: path
-   *         description: user object that needs to be updated
+   *         description: ID of user to return
    *         required: true
    *         schema:
-   *           $ref: #/components/schemas/User
+   *           type: integer
+   *           format: int64
+   *     requestBody:
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               avatarUrl:
+   *                 type: string
+   *               name:
+   *                 type: string
+   *                 example: Jane Doe
+   *               email:
+   *                 type: string
+   *                 example: email@domain.com
+   *               password:
+   *                 type: string
+   *                 format: password
+   *               role:
+   *                 type: string
+   *                 enum:
+   *                 - PLAYER
+   *                 - MODERATOR
+   *                 - ADMIN
    *     responses:
    *       200:
    *         description: user updated
