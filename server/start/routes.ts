@@ -20,6 +20,18 @@
 
 import Route from "@ioc:Adonis/Core/Route";
 
+Route.get("/", ({ response }) => {
+  response.send({
+    info: {
+      title: "Venture",
+      subtitle: "Player management for online tabletop RPG games",
+      description:
+        "Final project of the Graduate Course in Full Stack Web Development at the Pontifical Catholic University of Minas Gerais as a requirement for obtaining the graduate degree.",
+    },
+    specification: "/docs",
+  });
+});
+
 Route.get("/users", "UsersController.index");
 
 Route.post("/users", "UsersController.store");
