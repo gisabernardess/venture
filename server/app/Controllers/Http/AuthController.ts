@@ -11,11 +11,6 @@ export default class AuthController {
    *     tags:
    *       - auth
    *     summary: creates a user
-   *     responses:
-   *       201:
-   *         description: user created
-   *       400:
-   *         description: validation fails
    *     requestBody:
    *       content:
    *         application/json:
@@ -31,6 +26,11 @@ export default class AuthController {
    *               password:
    *                 type: string
    *                 format: password
+   *     responses:
+   *       201:
+   *         description: user created
+   *       400:
+   *         description: validation fails
    */
   public async register({ request, response }: HttpContextContract) {
     try {
@@ -39,7 +39,6 @@ export default class AuthController {
       const user = await User.create({
         email,
         password,
-        role: "PLAYER",
       });
 
       return response.status(201).send(user);
@@ -55,11 +54,6 @@ export default class AuthController {
    *     tags:
    *       - auth
    *     summary: authenticates a user
-   *     responses:
-   *       200:
-   *         description: login successful
-   *       400:
-   *         description: validation fails
    *     requestBody:
    *       content:
    *         application/json:
@@ -75,6 +69,11 @@ export default class AuthController {
    *               password:
    *                 type: string
    *                 format: password
+   *     responses:
+   *       200:
+   *         description: login successful
+   *       400:
+   *         description: validation fails
    */
   public async login({ auth, request, response }: HttpContextContract) {
     try {
@@ -86,7 +85,7 @@ export default class AuthController {
 
       return response.status(200).send(token.toJSON());
     } catch (error) {
-      response.badRequest(error.messages);
+      response.badRequest(error.message);
     }
   }
 }

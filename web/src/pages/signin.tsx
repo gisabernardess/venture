@@ -20,7 +20,7 @@ type SignInFormData = Pick<User, 'email' | 'password'>;
 
 const signInFormSchema = yup.object().shape({
   email: yup.string().required('Email is required').email('Invalid email'),
-  password: yup.string().required('Password is required'),
+  password: yup.string().required('Password is required').min(8),
 });
 
 export default function SignIn() {

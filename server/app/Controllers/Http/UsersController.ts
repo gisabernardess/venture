@@ -99,9 +99,8 @@ export default class UsersController {
    *         description: user not found
    */
   public async update({ request, response }: HttpContextContract) {
-    const { id } = request.params();
-    const { avatarUrl, name, email, oldPassword, password, role } =
-      request.body();
+    const { id, avatarUrl, name, email, oldPassword, password, role } =
+      request.all();
 
     const user = await User.find(id);
     if (!user) return response.status(404).send({ error: "User not found" });

@@ -23,8 +23,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>();
   const isAuthenticated = !!user;
 
-  useEffect(() => {});
-
   async function signIn({ email, password }: SignInCredentials) {
     try {
       const response = await api.post('/login', {
@@ -32,9 +30,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password,
       });
 
-      console.log(response);
+      //console.log(response);
     } catch (error) {
-      console.log(error);
+      console.log(error.message);
     }
   }
 
