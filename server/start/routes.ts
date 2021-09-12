@@ -32,12 +32,15 @@ Route.get("/", ({ response }) => {
   });
 });
 
-Route.get("/users", "UsersController.index");
+Route.post("/register", "AuthController.register");
+Route.post("/login", "AuthController.login");
 
-Route.post("/users", "UsersController.store");
+Route.group(() => {
+  Route.get("/users", "UsersController.index");
 
-Route.get("/users/:id", "UsersController.show");
+  Route.get("/users/:id", "UsersController.show");
 
-Route.put("/users/:id", "UsersController.update");
+  Route.put("/users/:id", "UsersController.update");
 
-Route.delete("/users/:id", "UsersController.destroy");
+  Route.delete("/users/:id", "UsersController.destroy");
+}).middleware("auth");

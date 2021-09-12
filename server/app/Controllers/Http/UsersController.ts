@@ -1,7 +1,7 @@
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 
 import User from "App/Models/User";
-import CreateUserValidator from "App/Validators/CreateUserValidator";
+
 export default class UsersController {
   /**
    * @swagger
@@ -20,51 +20,7 @@ export default class UsersController {
 
   /**
    * @swagger
-   * /users:
-   *   post:
-   *     tags:
-   *       - user
-   *     summary: creates a new user
-   *     responses:
-   *       201:
-   *         description: user created
-   *       400:
-   *         description: validation fails
-   *     requestBody:
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - email
-   *               - password
-   *             properties:
-   *               email:
-   *                 type: string
-   *                 example: email@domain.com
-   *               password:
-   *                 type: string
-   *                 format: password
-   */
-  public async store({ request, response }: HttpContextContract) {
-    try {
-      const { email, password } = await request.validate(CreateUserValidator);
-
-      const user = await User.create({
-        email,
-        password,
-        role: "PLAYER",
-      });
-
-      return response.status(201).send(user);
-    } catch (error) {
-      response.badRequest(error.messages);
-    }
-  }
-
-  /**
-   * @swagger
-   * /users/{id}:
+   * /user/{id}:
    *   get:
    *     tags:
    *       - user

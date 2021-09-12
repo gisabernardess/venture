@@ -17,22 +17,43 @@ import { AuthConfig } from '@ioc:Adonis/Addons/Auth'
 |
 */
 const authConfig: AuthConfig = {
-  guard: 'basic',
+  guard: 'api',
   guards: {
     /*
     |--------------------------------------------------------------------------
-    | Basic Auth Guard
+    | OAT Guard
     |--------------------------------------------------------------------------
     |
-    | Uses Basic auth to authenticate an HTTP request. There is no concept of
-    | "login" and "logout" with basic auth. You just authenticate the requests
-    | using a middleware and browser will prompt the user to enter their login
-    | details
+    | OAT (Opaque access tokens) guard uses database backed tokens to authenticate
+    | HTTP request. This guard DOES NOT rely on sessions or cookies and uses
+    | Authorization header value for authentication.
+    |
+    | Use this guard to authenticate mobile apps or web clients that cannot rely
+    | on cookies/sessions.
     |
     */
-    basic: {
-      driver: 'basic',
-      realm: 'Login',
+    api: {
+      driver: 'oat',
+
+      /*
+      |--------------------------------------------------------------------------
+      | Tokens provider
+      |--------------------------------------------------------------------------
+      |
+      | Uses SQL database for managing tokens. Use the "database" driver, when
+      | tokens are the secondary mode of authentication.
+      | For example: The Github personal tokens
+      |
+      | The foreignKey column is used to make the relationship between the user
+      | and the token. You are free to use any column name here.
+      |
+      */
+      tokenProvider: {
+        type: 'api',
+        driver: 'database',
+        table: 'api_tokens',
+        foreignKey: 'user_id',
+      },
 
       provider: {
         /*
@@ -43,15 +64,15 @@ const authConfig: AuthConfig = {
         | Name of the driver
         |
         */
-        driver: 'lucid',
+        driver: 'database',
 
         /*
         |--------------------------------------------------------------------------
         | Identifier key
         |--------------------------------------------------------------------------
         |
-        | The identifier key is the unique key on the model. In most cases specifying
-        | the primary key is the right choice.
+        | The identifier key is the unique key inside the defined database table.
+        | In most cases specifying the primary key is the right choice.
         |
         */
         identifierKey: 'id',
@@ -70,16 +91,14 @@ const authConfig: AuthConfig = {
 
         /*
         |--------------------------------------------------------------------------
-        | Model
+        | Database table
         |--------------------------------------------------------------------------
         |
-        | The model to use for fetching or finding users. The model is imported
-        | lazily since the config files are read way earlier in the lifecycle
-        | of booting the app and the models may not be in a usable state at
-        | that time.
+        | The database table to query. Make sure the database table has a `password`
+        | field and `remember_me_token` column.
         |
         */
-        model: () => import('App/Models/User'),
+        usersTable: 'users',
       },
     },
   },
