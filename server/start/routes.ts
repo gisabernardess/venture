@@ -19,6 +19,7 @@
 */
 
 import Route from "@ioc:Adonis/Core/Route";
+import User from "App/Models/User";
 
 Route.get("/", ({ response }) => {
   response.send({
@@ -32,8 +33,17 @@ Route.get("/", ({ response }) => {
   });
 });
 
-Route.post("/register", "AuthController.register");
-Route.post("/login", "AuthController.login");
+Route.group(() => {
+  Route.post("/register", "AuthController.register");
+  Route.post("/login", "AuthController.login");
+
+  Route.get("/github/redirect", async ({ ally }) => {
+    return ally.use("github").redirect();
+  });
+
+  // TODO: decide if this URL should be changed to something like /github/callback
+  Route.get("/api/auth/callback", "AuthController.githubAuthentication");
+});
 
 Route.group(() => {
   Route.get("/users", "UsersController.index");

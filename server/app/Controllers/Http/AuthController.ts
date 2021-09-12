@@ -3,6 +3,10 @@ import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import User from "App/Models/User";
 import CreateUserValidator from "App/Validators/CreateUserValidator";
 
+type GitHubUser = {
+  email: string | null;
+};
+
 export default class AuthController {
   /**
    * @swagger
@@ -87,5 +91,38 @@ export default class AuthController {
     } catch (error) {
       response.badRequest(error.message);
     }
+  }
+
+  public async githubAuthentication({
+    ally,
+    auth,
+    response,
+  }: HttpContextContract) {
+    const github = ally.use("github");
+    const githubUser: GitHubUser = await github.user();
+
+    if (github.accessDenied()) {
+      return response.status(400).send({ error: "Access was denied" });
+    }
+
+    if (github.stateMisMatch()) {
+      return response.status(400).send({ error: "Request expired. Try again" });
+    }
+
+    if (github.hasError()) {
+      return response.status(400).send({ error: github.getError() });
+    }
+
+    if (!githubUser.email) {
+      return response.status(400).send({ error: "Invalid account." });
+    }
+
+    const user = await User.firstOrCreate(
+      { email: githubUser.email },
+      // TODO: decide if the password should be null in such cases
+      { role: "PLAYER", password: "AUTHENTICATED_WITH_GITHUB" }
+    );
+
+    await auth.use("api").login(user);
   }
 }
