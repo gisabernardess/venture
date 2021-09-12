@@ -7,7 +7,7 @@ import { BaseModel, beforeSave, column } from "@ioc:Adonis/Lucid/Orm";
  *  components:
  *   schemas:
  *    User:
- *      description: A representation of a user
+ *      description: Representation of a user
  *      type: object
  *      properties:
  *        id:
@@ -58,6 +58,8 @@ export default class User extends BaseModel {
   @column({ serializeAs: null })
   public password: string;
 
+  public oldPassword: string;
+
   @column()
   public role: string;
 
@@ -72,5 +74,9 @@ export default class User extends BaseModel {
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password);
     }
+  }
+
+  checkPassword(password: string) {
+    return Hash.verify(this.password, password);
   }
 }

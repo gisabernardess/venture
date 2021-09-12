@@ -1,9 +1,7 @@
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
-import { DateTime } from "luxon";
 
 import User from "App/Models/User";
 import CreateUserValidator from "App/Validators/CreateUserValidator";
-import UpdateUserValidator from "App/Validators/UpdateUserValidator";
 export default class UsersController {
   /**
    * @swagger
@@ -66,14 +64,14 @@ export default class UsersController {
 
   /**
    * @swagger
-   * /user/{id}:
+   * /users/{id}:
    *   get:
    *     tags:
    *       - user
    *     summary: finds a user by id
    *     description: return a single user
    *     parameters:
-   *       - name: userId
+   *       - name: id
    *         in: path
    *         description: ID of user to return
    *         required: true
@@ -97,7 +95,7 @@ export default class UsersController {
 
   /**
    * @swagger
-   * /user/{id}:
+   * /users/{id}:
    *   put:
    *     tags:
    *       - user
@@ -121,20 +119,39 @@ export default class UsersController {
    *         description: user not found
    */
   public async update({ request, response }: HttpContextContract) {
-    try {
-      const user = await request.validate(UpdateUserValidator);
-    } catch (error) {
-      response.badRequest(error.messages);
-    }
     const { id } = request.params();
-    const user = await User.findOrFail(id);
-    await user.merge({ updatedAt: DateTime.local() }).save();
+    const { avatarUrl, name, email, oldPassword, password, role } =
+      request.body();
+
+    const user = await User.find(id);
+    if (!user) return response.status(404).send({ error: "User not found" });
+
+    if (email && email !== user.email) {
+      const userExists = await User.find({ where: { email } });
+      if (userExists)
+        return response.status(400).send({ error: "User already exists!" });
+    }
+
+    if (oldPassword && !(await user.checkPassword(oldPassword))) {
+      return response.status(400).send({ error: "Password does not match!" });
+    }
+
+    await user
+      .merge({
+        avatarUrl,
+        name,
+        email,
+        password,
+        role,
+      })
+      .save();
+
     return user;
   }
 
   /**
    * @swagger
-   * /user/{id}:
+   * /users/{id}:
    *   delete:
    *     tags:
    *       - user
@@ -150,17 +167,17 @@ export default class UsersController {
    *         schema:
    *           $ref: #/components/schemas/User
    *     responses:
-   *       400:
-   *         description: Invalid ID supplied
+   *       200:
+   *         description: user deleted
    *       404:
-   *         description: User not found
-   *       405:
-   *         description: Validation exception
-   *
+   *         description: user not found
    */
-  public async destroy() {
-    const user = await User.findOrFail(1);
-    await user.delete();
-    return "Delete user";
+  public async destroy({ request, response }: HttpContextContract) {
+    const { id } = request.params();
+
+    const user = await User.findOrFail(id);
+    if (!user) return response.status(404).send({ error: "User not found" });
+
+    return await user.delete();
   }
 }
