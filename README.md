@@ -47,11 +47,11 @@ You can view the layout of the project in the <a href="https://www.figma.com/fil
 
 ## 🔖 Project Specification
 
-You can view the project specification [here](https://github.com/gisabernardess/venture/wiki/specification).
+You can view the project specification in the [EN](https://github.com/gisabernardess/venture/wiki/specification) and [PT-BR](https://github.com/gisabernardess/venture/wiki/especificacao) versions.
 
 ## ℹ️ How To Use
 
-To clone and run this application, you'll need [Git](https://git-scm.com) and [Yarn](https://legacy.yarnpkg.com). From your command line:
+To clone and run this application, you'll need [Git](https://git-scm.com), [Yarn](https://legacy.yarnpkg.com) and [Node.js](https://nodejs.org/en/) >= 14.16. From your command line:
 
 ```bash
 # Clone the repository
