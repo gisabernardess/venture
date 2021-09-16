@@ -35,13 +35,18 @@ Route.get("/", ({ response }) => {
 Route.group(() => {
   Route.post("/register", "AuthController.register");
   Route.post("/login", "AuthController.login");
+  Route.post("/logout", "AuthController.logout");
 
   Route.get("/github/redirect", async ({ ally }) => {
     return ally.use("github").redirect();
   });
 
-  // TODO: decide if this URL should be changed to something like /github/callback
-  Route.get("/api/auth/callback", "AuthController.githubAuthentication");
+  Route.get("/discord/redirect", async ({ ally }) => {
+    return ally.use("discord").redirect();
+  });
+
+  Route.get("/github/callback", "AuthController.githubAuthentication");
+  Route.get("/discord/callback", "AuthController.discordAuthentication");
 });
 
 Route.group(() => {
