@@ -5,13 +5,17 @@ export default class CreateUserValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
+    name: schema.string({ trim: true }),
     email: schema.string({ trim: true }, [
       rules.email({
         sanitize: true, // transform the local part of the email (before the @ symbol) to all lowercase.
       }),
       rules.unique({ table: "users", column: "email" }),
     ]),
-    password: schema.string({}, [rules.confirmed(), rules.minLength(8)]),
+    password: schema.string({}, [
+      rules.confirmed("password_confirmation"),
+      rules.minLength(8),
+    ]),
   });
 
   public messages = {

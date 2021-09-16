@@ -1,5 +1,6 @@
-import { useRouter } from 'next/router';
-import { Flex, Button, Stack, Icon } from '@chakra-ui/react';
+import { useContext } from 'react';
+import { AuthContext } from '../contexts/AuthContext';
+import { Flex, Button, Stack } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -11,22 +12,27 @@ import {
   GoogleButton,
   TextLink,
 } from '../components';
-import { isEmpty } from '../utils';
 
 type SignUpFormData = {
   name: string;
   email: string;
   password: string;
+  password_confirmation: string;
 };
 
 const signUpFormSchema = yup.object().shape({
   name: yup.string().required('Name is required'),
   email: yup.string().required('Email is required').email('Invalid email'),
   password: yup.string().required('Password is required'),
+  password_confirmation: yup
+    .string()
+    .when('password', (password, field) =>
+      password ? field.required('Passwords do not match') : field,
+    ),
 });
 
 export default function SignUp() {
-  const router = useRouter();
+  const { signUp } = useContext(AuthContext);
 
   const {
     register,
@@ -37,8 +43,10 @@ export default function SignUp() {
   });
 
   const handleSignUp: SubmitHandler<SignUpFormData> = async (values) => {
-    if (isEmpty(errors)) {
-      router.push(`/dashboard/2`);
+    try {
+      await signUp(values);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -75,6 +83,13 @@ export default function SignUp() {
               placeholder="**********"
               error={errors.password}
               {...register('password')}
+            />
+            <Input
+              name="password_confirmation"
+              type="password"
+              placeholder="**********"
+              error={errors.password_confirmation}
+              {...register('password_confirmation')}
             />
           </Stack>
           <Button

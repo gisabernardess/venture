@@ -21,9 +21,13 @@ export default class AuthController {
    *           schema:
    *             type: object
    *             required:
+   *               - name
    *               - email
    *               - password
    *             properties:
+   *               name:
+   *                 type: string
+   *                 example: Jane Doe
    *               email:
    *                 type: string
    *                 example: email@domain.com
@@ -38,16 +42,19 @@ export default class AuthController {
    */
   public async register({ request, response }: HttpContextContract) {
     try {
-      const { email, password } = await request.validate(CreateUserValidator);
+      const { name, email, password } = await request.validate(
+        CreateUserValidator
+      );
 
       const user = await User.create({
+        name,
         email,
         password,
       });
 
       return response.status(201).send(user);
     } catch (error) {
-      response.badRequest(error.messages);
+      response.badRequest(error.message);
     }
   }
 

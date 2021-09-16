@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 import { Flex, Button, Stack } from '@chakra-ui/react';
@@ -24,7 +23,6 @@ const signInFormSchema = yup.object().shape({
 });
 
 export default function SignIn() {
-  const router = useRouter();
   const { signIn } = useContext(AuthContext);
 
   const {
@@ -36,7 +34,11 @@ export default function SignIn() {
   });
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
-    await signIn(values);
+    try {
+      await signIn(values);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

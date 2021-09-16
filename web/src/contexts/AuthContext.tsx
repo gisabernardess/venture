@@ -1,14 +1,19 @@
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import { createContext, ReactNode, useState } from 'react';
 import Router from 'next/router';
 
 import { api } from '../services/api';
 import { User } from '../models/types';
 
+type SignUpCredentials = Pick<User, 'name' | 'email' | 'password'> & {
+  password_confirmation: string;
+};
+
 type SignInCredentials = Pick<User, 'email' | 'password'>;
 
 type AuthContextData = {
   signIn(credentials: SignInCredentials): Promise<void>;
-  signUp(credentials: SignInCredentials): Promise<void>;
+  signUp(credentials: SignUpCredentials): Promise<void>;
   user: User;
   isAuthenticated: boolean;
 };
@@ -20,29 +25,44 @@ type AuthProviderProps = {
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
+  const router = useRouter();
   const [user, setUser] = useState<User>();
   const isAuthenticated = !!user;
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
-      const response = await api.post('/login', {
+      const { data } = await api.post('/login', {
         email,
         password,
       });
 
-      //console.log(response);
+      if (data) setUser(data);
+
+      alert('Successfully logged in!');
+      router.push(`dashboard/${data.id}`);
     } catch (error) {
       console.log(error.message);
     }
   }
 
-  async function signUp({ email, password }: SignInCredentials) {
+  async function signUp({
+    name,
+    email,
+    password,
+    password_confirmation,
+  }: SignUpCredentials) {
     try {
-      const response = await api.post('/register', {
+      const { data } = await api.post('/register', {
+        name,
         email,
         password,
+        password_confirmation,
       });
-      console.log(response.data);
+
+      if (data) setUser(data);
+
+      alert('Registration successful!');
+      router.push(`dashboard/${data.id}`);
     } catch (error) {
       console.log(error);
     }

@@ -19,7 +19,6 @@
 */
 
 import Route from "@ioc:Adonis/Core/Route";
-import User from "App/Models/User";
 
 Route.get("/", ({ response }) => {
   response.send({

@@ -1,7 +1,11 @@
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthContext';
 import { Flex } from '@chakra-ui/react';
 import { Topbar, Sidebar } from '../../components';
 
 export default function Dashboard({ id }) {
+  const { user } = useContext(AuthContext);
+  console.log(user);
   return (
     <Flex direction="column" h="100vh">
       <Topbar />
