@@ -1,4 +1,4 @@
 export * from './Input';
 export * from './IconButton';
-export * from './GoogleButton';
+export * from './SocialButton';
 export * from './BackButton';

@@ -1,15 +1,18 @@
 import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
-import { Flex, Button, Stack } from '@chakra-ui/react';
+
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+
+import { Flex, Button, Stack } from '@chakra-ui/react';
+import { FaGithub, FaDiscord } from 'react-icons/fa';
 
 import {
   Input,
   Container,
   Divider,
-  GoogleButton,
+  SocialButton,
   TextLink,
 } from '../components';
 
@@ -53,7 +56,18 @@ export default function SignUp() {
   return (
     <Container image="game-signup">
       <Flex w="100%" maxW={360} flexDir="column" p="8">
-        <GoogleButton label="Sign Up" />
+        <SocialButton
+          icon={FaGithub}
+          name="Github"
+          action="Sign Up"
+          provider="GITHUB"
+        />
+        <SocialButton
+          icon={FaDiscord}
+          name="Discord"
+          action="Sign Up"
+          provider="DISCORD"
+        />
         <Divider />
         <Flex
           as="form"

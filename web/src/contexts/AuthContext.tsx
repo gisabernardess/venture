@@ -1,19 +1,21 @@
 import { useRouter } from 'next/router';
 import { createContext, ReactNode, useState } from 'react';
-import Router from 'next/router';
 
 import { api } from '../services/api';
 import { User } from '../models/types';
+
+export type ProviderType = 'GITHUB' | 'DISCORD';
+
+type SignInCredentials = Pick<User, 'email' | 'password'>;
 
 type SignUpCredentials = Pick<User, 'name' | 'email' | 'password'> & {
   password_confirmation: string;
 };
 
-type SignInCredentials = Pick<User, 'email' | 'password'>;
-
 type AuthContextData = {
-  signIn(credentials: SignInCredentials): Promise<void>;
-  signUp(credentials: SignUpCredentials): Promise<void>;
+  socialAuth: (type: ProviderType) => Promise<void>;
+  signIn: (credentials: SignInCredentials) => Promise<void>;
+  signUp: (credentials: SignUpCredentials) => Promise<void>;
   user: User;
   isAuthenticated: boolean;
 };
@@ -29,6 +31,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User>();
   const isAuthenticated = !!user;
 
+  async function socialAuth(type: ProviderType) {
+    try {
+      switch (type) {
+        case 'GITHUB':
+          const { data: github } = await api.get('/github/redirect');
+          console.log(github);
+          break;
+        case 'DISCORD':
+          const { data: discord } = await api.get('/discord/redirect');
+          console.log(discord);
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   async function signIn({ email, password }: SignInCredentials) {
     try {
       const { data } = await api.post('/login', {
@@ -41,7 +62,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       alert('Successfully logged in!');
       router.push(`dashboard/${data.id}`);
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
     }
   }
 
@@ -69,7 +90,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   return (
-    <AuthContext.Provider value={{ signIn, signUp, user, isAuthenticated }}>
+    <AuthContext.Provider
+      value={{ socialAuth, signIn, signUp, user, isAuthenticated }}
+    >
       {children}
     </AuthContext.Provider>
   );
