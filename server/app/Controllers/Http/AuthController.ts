@@ -6,6 +6,7 @@ import User from "App/Models/User";
 import CreateUserValidator from "App/Validators/CreateUserValidator";
 import { AllyDriverContract, Oauth2AccessToken } from "@ioc:Adonis/Addons/Ally";
 import { AuthContract } from "@ioc:Adonis/Addons/Auth";
+import ResetPasswordValidator from "App/Validators/ResetPasswordValidator";
 
 type OAuthProviderUser = {
   email: string | null;
@@ -126,6 +127,88 @@ export default class AuthController {
     await auth.use("api").revoke();
 
     return response.status(200).send({ revoked: true });
+  }
+
+  /**
+   * @swagger
+   * /login:
+   *   post:
+   *     tags:
+   *       - auth
+   *     summary: user's reset password
+   *     requestBody:
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - email
+   *             properties:
+   *               email:
+   *                 type: string
+   *                 example: email@domain.com
+   *     responses:
+   *       200:
+   *         description: login successful
+   *       400:
+   *         description: validation fails
+   *       404:
+   *         description: user not found
+   *       500:
+   *         description: server error
+   */
+  public async resetPassword({ auth, request, response }: HttpContextContract) {
+    try {
+      const { email } = await request.validate(ResetPasswordValidator);
+
+      const userProvider = await auth.use("api").provider.findByUid(email);
+
+      if (!userProvider.user) {
+        return response.status(404).json({
+          success: false,
+          messages: {
+            errors: [
+              {
+                rule: "exist",
+                field: "email",
+                message: "This email address does not exist",
+              },
+            ],
+          },
+        });
+      }
+
+      userProvider.setRememberMeToken(string.generateRandom(10));
+      await auth.use("api").provider.updateRememberMeToken(userProvider);
+
+      // await Mail.send((message) => {
+      //   message
+      //     .from("no-reply@bio2game.com")
+      //     .to(userProvider.user!.email)
+      //     .subject("Changement de mot de passe sur Bio2Game.com")
+      //     .htmlView("emails/forget-password", {
+      //       token: Encryption.encrypt({
+      //         id: userProvider.user!.id,
+      //         token: userProvider.getRememberMeToken(),
+      //       }),
+      //       domain: process.env.WEB_URL || "https://www.bio2game.com",
+      //     });
+      // }).catch(() => null);
+
+      return response.json({ success: true });
+    } catch (error) {
+      if (error.code === "E_VALIDATION_FAILURE") {
+        return response.status(400).json({
+          success: false,
+          messages: error.messages,
+        });
+      }
+      return response.status(500).json({
+        success: false,
+        messages: error.messages,
+        error,
+      });
+    }
   }
 
   /**
