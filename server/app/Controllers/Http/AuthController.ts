@@ -49,6 +49,8 @@ export default class AuthController {
    *         description: user created
    *       400:
    *         description: validation fails
+   *       501:
+   *         description: not implemented
    */
   public async register({ request, response }: HttpContextContract) {
     try {
@@ -62,9 +64,9 @@ export default class AuthController {
         password,
       });
 
-      return response.status(201).send(user);
+      return response.ok(user);
     } catch (error) {
-      response.badRequest(error.message);
+      response.notImplemented(error.message);
     }
   }
 
@@ -95,20 +97,31 @@ export default class AuthController {
    *         description: login successful
    *       400:
    *         description: validation fails
+   *       404:
+   *         description: user not found
+   *       501:
+   *         description: not implemented
    */
   public async login({ auth, request, response }: HttpContextContract) {
     try {
       const { email, password } = request.all();
 
       const user = await User.findBy("email", email);
+      if (!user) return response.notFound({ error: "User not found!" });
+
+      if (!(await user.checkPassword(password))) {
+        return response.badRequest({
+          error: "Invalid password!",
+        });
+      }
 
       const token = await auth.use("api").attempt(email, password, {
         expiresIn: "24hours",
       });
 
-      return response.status(200).send({ user: user, token: token.toJSON() });
+      return response.ok({ user: user, token: token.toJSON() });
     } catch (error) {
-      response.badRequest(error.message);
+      response.notImplemented(error);
     }
   }
 
@@ -125,8 +138,7 @@ export default class AuthController {
    */
   public async logout({ auth, response }: HttpContextContract) {
     await auth.use("api").revoke();
-
-    return response.status(200).send({ revoked: true });
+    return response.ok({ revoked: true });
   }
 
   /**
@@ -164,17 +176,8 @@ export default class AuthController {
       const userProvider = await auth.use("api").provider.findByUid(email);
 
       if (!userProvider.user) {
-        return response.status(404).json({
-          success: false,
-          messages: {
-            errors: [
-              {
-                rule: "exist",
-                field: "email",
-                message: "This email address does not exist",
-              },
-            ],
-          },
+        return response.notFound({
+          error: "This email address does not exist",
         });
       }
 
@@ -195,19 +198,9 @@ export default class AuthController {
       //     });
       // }).catch(() => null);
 
-      return response.json({ success: true });
+      return response.ok({ success: true });
     } catch (error) {
-      if (error.code === "E_VALIDATION_FAILURE") {
-        return response.status(400).json({
-          success: false,
-          messages: error.messages,
-        });
-      }
-      return response.status(500).json({
-        success: false,
-        messages: error.messages,
-        error,
-      });
+      return response.notImplemented(error);
     }
   }
 

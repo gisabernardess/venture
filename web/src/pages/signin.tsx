@@ -38,11 +38,7 @@ export default function SignIn() {
   });
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
-    try {
-      await signIn(values);
-    } catch (error) {
-      console.log(error);
-    }
+    await signIn(values);
   };
 
   return (

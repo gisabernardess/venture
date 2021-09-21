@@ -1,5 +1,6 @@
-import { useRouter } from 'next/router';
 import { createContext, ReactNode, useState } from 'react';
+
+import { useNotification } from '../hooks/useNotification';
 
 import { api } from '../services/api';
 import { User } from '../models/types';
@@ -27,7 +28,8 @@ type AuthProviderProps = {
 export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const router = useRouter();
+  const notification = useNotification();
+
   const [user, setUser] = useState<User>();
   const isAuthenticated = !!user;
 
@@ -35,16 +37,28 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       switch (type) {
         case 'GITHUB':
-          const { data: github } = await api.get('/github/redirect');
-          console.log(github);
+          await api
+            .get('/github/redirect')
+            .then(({ data: github }) => {
+              console.log(github);
+            })
+            .catch(({ response }) => console.log(response));
           break;
         case 'DISCORD':
-          const { data: discord } = await api.get('/discord/redirect');
-          console.log(discord);
+          await api
+            .get('/discord/redirect')
+            .then(({ data: discord }) => {
+              console.log(discord);
+            })
+            .catch(({ response }) => console.log(response));
           break;
         case 'GOOGLE':
-          const { data: google } = await api.get('/google/redirect');
-          console.log(google);
+          await api
+            .get('/google/redirect')
+            .then(({ data: google }) => {
+              console.log(google);
+            })
+            .catch(({ response }) => console.log(response));
           break;
         default:
           break;
@@ -56,17 +70,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   async function signIn({ email, password }: SignInCredentials) {
     try {
-      const { data } = await api.post('/login', {
-        email,
-        password,
-      });
-
-      if (data) setUser(data);
-
-      alert('Successfully logged in!');
-      router.push(`dashboard/${data.id}`);
+      await api
+        .post('/login', {
+          email,
+          password,
+        })
+        .then(({ data }) => {
+          if (data) setUser(data.user);
+          notification.success({
+            title: 'Successfully logged in!',
+            to: `dashboard/${data.user.id}`,
+          });
+        })
+        .catch(({ response }) => {
+          notification.error(response.data.error);
+        });
     } catch (error) {
-      console.log(error);
+      notification.error(error.message);
     }
   }
 
@@ -77,19 +97,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
     password_confirmation,
   }: SignUpCredentials) {
     try {
-      const { data } = await api.post('/register', {
-        name,
-        email,
-        password,
-        password_confirmation,
-      });
-
-      if (data) setUser(data);
-
-      alert('Registration successful!');
-      router.push(`dashboard/${data.id}`);
+      await api
+        .post('/register', {
+          name,
+          email,
+          password,
+          password_confirmation,
+        })
+        .then(({ data }) => {
+          if (data) setUser(data.user);
+          notification.success({
+            title: 'Registration successful!',
+            to: `dashboard/${data.user.id}`,
+          });
+        })
+        .catch(({ response }) => {
+          notification.error(response.data.error);
+        });
     } catch (error) {
-      console.log(error);
+      notification.error(error.message);
     }
   }
 
