@@ -7,6 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { Flex, Button, Stack } from '@chakra-ui/react';
 import { FaGithub, FaDiscord } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
 
 import {
   Input,
@@ -56,6 +57,12 @@ export default function SignUp() {
   return (
     <Container image="game-signup">
       <Flex w="100%" maxW={360} flexDir="column" p="8">
+        <SocialButton
+          icon={FcGoogle}
+          name="Google"
+          action="Sign Up"
+          provider="GOOGLE"
+        />
         <SocialButton
           icon={FaGithub}
           name="Github"

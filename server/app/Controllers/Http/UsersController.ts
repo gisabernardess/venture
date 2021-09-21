@@ -20,7 +20,7 @@ export default class UsersController {
 
   /**
    * @swagger
-   * /user/{id}:
+   * /users/{id}:
    *   get:
    *     tags:
    *       - user
@@ -135,7 +135,7 @@ export default class UsersController {
    *     tags:
    *       - user
    *     summary: deletes an existing user
-   *     description: this can only be done by the logged in user.
+   *     description: this can only be done by the logged user.
    *     produces:
    *       - application/json
    *     parameters:

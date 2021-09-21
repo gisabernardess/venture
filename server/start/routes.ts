@@ -32,6 +32,9 @@ Route.get("/", ({ response }) => {
   });
 });
 
+/**
+ * Auth Routes
+ */
 Route.group(() => {
   Route.post("/register", "AuthController.register");
   Route.post("/login", "AuthController.login");
@@ -45,15 +48,28 @@ Route.group(() => {
     return ally.use("discord").redirect();
   });
 
+  Route.get("/google/redirect", async ({ ally }) => {
+    return ally.use("google").redirect();
+  });
+
   Route.get("/github/callback", "AuthController.githubAuthentication");
   Route.get("/discord/callback", "AuthController.discordAuthentication");
+  Route.get("/google/callback", "AuthController.googleAuthentication");
 });
 
+/**
+ * Public Routes
+ */
 Route.group(() => {
   Route.get("/users", "UsersController.index");
 
   Route.get("/users/:id", "UsersController.show");
+});
 
+/**
+ * Private Routes
+ */
+Route.group(() => {
   Route.put("/users/:id", "UsersController.update");
 
   Route.delete("/users/:id", "UsersController.destroy");

@@ -4,7 +4,7 @@ import { createContext, ReactNode, useState } from 'react';
 import { api } from '../services/api';
 import { User } from '../models/types';
 
-export type ProviderType = 'GITHUB' | 'DISCORD';
+export type ProviderType = 'GOOGLE' | 'GITHUB' | 'DISCORD';
 
 type SignInCredentials = Pick<User, 'email' | 'password'>;
 
@@ -41,6 +41,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
         case 'DISCORD':
           const { data: discord } = await api.get('/discord/redirect');
           console.log(discord);
+          break;
+        case 'GOOGLE':
+          const { data: google } = await api.get('/google/redirect');
+          console.log(google);
           break;
         default:
           break;

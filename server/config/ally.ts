@@ -28,6 +28,8 @@ const allyConfig: AllyConfig = {
     clientId: Env.get("GITHUB_CLIENT_ID"),
     clientSecret: Env.get("GITHUB_CLIENT_SECRET"),
     callbackUrl: "http://localhost:3333/github/callback",
+    scopes: ["user"],
+    allowSignup: true,
   },
   /*
 	|--------------------------------------------------------------------------
@@ -39,6 +41,10 @@ const allyConfig: AllyConfig = {
     clientId: Env.get("GOOGLE_CLIENT_ID"),
     clientSecret: Env.get("GOOGLE_CLIENT_SECRET"),
     callbackUrl: "http://localhost:3333/google/callback",
+    prompt: "select_account",
+    accessType: "offline",
+    display: "page",
+    scopes: ["userinfo.email"],
   },
   /*
 	|--------------------------------------------------------------------------
@@ -50,6 +56,10 @@ const allyConfig: AllyConfig = {
     clientId: Env.get("DISCORD_CLIENT_ID"),
     clientSecret: Env.get("DISCORD_CLIENT_SECRET"),
     callbackUrl: "http://localhost:3333/discord/callback",
+    prompt: "consent",
+    disableGuildSelect: false,
+    permissions: 10,
+    scopes: ["identify", "email"],
   },
 };
 

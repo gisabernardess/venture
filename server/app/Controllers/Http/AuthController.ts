@@ -29,6 +29,7 @@ export default class AuthController {
    *               - name
    *               - email
    *               - password
+   *               - password_confirmation
    *             properties:
    *               name:
    *                 type: string
@@ -37,6 +38,9 @@ export default class AuthController {
    *                 type: string
    *                 example: email@domain.com
    *               password:
+   *                 type: string
+   *                 format: password
+   *               password_confirmation:
    *                 type: string
    *                 format: password
    *     responses:
@@ -164,6 +168,27 @@ export default class AuthController {
     response,
   }: HttpContextContract) {
     await this.authenticateUser(ally.use("discord"), auth, response);
+  }
+
+  /**
+   * @swagger
+   * /google/callback:
+   *   get:
+   *     tags:
+   *       - auth
+   *     summary: authenticates a user using the Google OAuth provider
+   *     responses:
+   *       200:
+   *         description: authentication successful
+   *       400:
+   *         description: authentication failed
+   */
+  public async googleAuthentication({
+    ally,
+    auth,
+    response,
+  }: HttpContextContract) {
+    await this.authenticateUser(ally.use("google"), auth, response);
   }
 
   private async authenticateUser(
