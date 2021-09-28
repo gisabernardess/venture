@@ -1,5 +1,4 @@
-import { useContext } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 import { Flex, Text, Box, Avatar } from '@chakra-ui/react';
 
 interface ProfileProps {
@@ -7,20 +6,20 @@ interface ProfileProps {
 }
 
 export function Profile({ showProfileData = true }: ProfileProps) {
-  const { user } = useContext(AuthContext);
+  const { user } = useAuth();
 
   return (
     <Flex align="center">
       {showProfileData && (
         <Box mr="4" textAlign="right">
-          <Text>{user.name}</Text>
+          <Text>{user?.name}</Text>
           <Text color="gray.300" fontSize="small">
-            {user.email}
+            {user?.email}
           </Text>
         </Box>
       )}
 
-      <Avatar size="md" name={user.name} src={user.avatarUrl} />
+      <Avatar size="md" name={user?.name} src={user?.avatarUrl} />
     </Flex>
   );
 }

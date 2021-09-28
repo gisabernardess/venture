@@ -39,6 +39,7 @@ Route.group(() => {
   Route.post("/register", "AuthController.register");
   Route.post("/login", "AuthController.login");
   Route.post("/logout", "AuthController.logout");
+  Route.post("/reset", "AuthController.resetPassword");
 
   Route.get("/github/redirect", async ({ ally }) => {
     return ally.use("github").redirect();
@@ -62,7 +63,6 @@ Route.group(() => {
  */
 Route.group(() => {
   Route.get("/users", "UsersController.index");
-
   Route.get("/users/:id", "UsersController.show");
 });
 
@@ -70,7 +70,7 @@ Route.group(() => {
  * Private Routes
  */
 Route.group(() => {
+  Route.get("/me", "AuthController.show");
   Route.put("/users/:id", "UsersController.update");
-
   Route.delete("/users/:id", "UsersController.destroy");
 }).middleware("auth");

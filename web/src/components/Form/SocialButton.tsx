@@ -1,7 +1,6 @@
-import { useContext } from 'react';
 import { Button, Icon } from '@chakra-ui/react';
 import { ElementType } from 'react';
-import { AuthContext, ProviderType } from '../../contexts/AuthContext';
+import { useAuth, ProviderType } from '../../contexts/AuthContext';
 
 interface SocialButtonProps {
   icon: ElementType;
@@ -16,7 +15,8 @@ export function SocialButton({
   action,
   provider,
 }: SocialButtonProps) {
-  const { socialAuth } = useContext(AuthContext);
+  const { socialAuth } = useAuth();
+
   return (
     <Button
       color="gray.600"

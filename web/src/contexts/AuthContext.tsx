@@ -1,4 +1,11 @@
-import { createContext, ReactNode, useState, useContext } from 'react';
+import {
+  createContext,
+  ReactNode,
+  useState,
+  useContext,
+  useEffect,
+} from 'react';
+import { setCookie, parseCookies } from 'nookies';
 
 import { useNotification } from '../hooks/useNotification';
 
@@ -24,13 +31,21 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
-export const AuthContext = createContext({} as AuthContextData);
+const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const notification = useNotification();
 
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<User | null>(null);
   const isAuthenticated = !!user;
+
+  useEffect(() => {
+    const { ['venture.token']: token } = parseCookies();
+
+    if (token) {
+      api.get('/me').then(({ data: { user } }) => setUser(user));
+    }
+  }, []);
 
   function signIn(credentials: Pick<AuthenticateProps, 'email' | 'password'>) {
     authenticate('/login', credentials, { title: 'Successfully logged in!' });
@@ -82,7 +97,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       await api
         .post('/logout')
         .then(() => {
-          setUser(undefined);
+          setUser(null);
           notification.success({
             title: 'Successfully logged out!',
             to: '/',
@@ -107,7 +122,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
           ...credentials,
         })
         .then(({ data: { user, token } }) => {
-          if (token) setUser(user);
+          setCookie(undefined, 'venture.token', token, {
+            maxAge: 60 * 60 * 24, // 24 hours
+          });
+
+          setUser(user);
+
+          api.defaults.headers['Authorization'] = `Bearer ${token}`;
+
           notification.success({
             title: toast.title,
             to: `dashboard/${user.id}`,

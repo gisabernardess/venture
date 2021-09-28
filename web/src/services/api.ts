@@ -1,5 +1,4 @@
-import axios from 'axios';
+import { getAPIClient } from './axios';
 
-export const api = axios.create({
-  baseURL: 'http://localhost:3333',
-});
+// para todas as requests a partir do browser
+export const api = getAPIClient();

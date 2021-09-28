@@ -14,6 +14,10 @@ type OAuthProviderUser = {
 };
 
 export default class AuthController {
+  public async show({ auth, response }: HttpContextContract) {
+    const { password, ...user } = auth.use("api").user!;
+    return response.ok({ user: user });
+  }
   /**
    * @swagger
    * /register:
@@ -52,7 +56,7 @@ export default class AuthController {
    *       501:
    *         description: not implemented
    */
-  public async register({ request, response }: HttpContextContract) {
+  public async register({ auth, request, response }: HttpContextContract) {
     try {
       const { name, email, password } = await request.validate(
         CreateUserValidator
@@ -64,7 +68,9 @@ export default class AuthController {
         password,
       });
 
-      return response.ok(user);
+      const { token } = await this.generateToken(auth, email, password);
+
+      return response.ok({ user: user, token: token });
     } catch (error) {
       response.notImplemented(error.message);
     }
@@ -115,11 +121,9 @@ export default class AuthController {
         });
       }
 
-      const token = await auth.use("api").attempt(email, password, {
-        expiresIn: "24hours",
-      });
+      const { token } = await this.generateToken(auth, email, password);
 
-      return response.ok({ user: user, token: token.toJSON() });
+      return response.ok({ user: user, token: token });
     } catch (error) {
       response.notImplemented(error);
     }
@@ -300,5 +304,15 @@ export default class AuthController {
     );
 
     await auth.use("api").login(user);
+  }
+
+  private async generateToken(
+    auth: AuthContract,
+    email: string,
+    password: string
+  ) {
+    return await auth.use("api").attempt(email, password, {
+      expiresIn: "24hours",
+    });
   }
 }
