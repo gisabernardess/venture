@@ -12,16 +12,14 @@ interface SEOProps {
  * information provided through meta tags
  * global SEO component
  */
-export default function SEO({
+export function SEO({
   title,
   description,
   image,
   shouldExcludeTitleSuffix = false,
   shouldIndexPage = true,
 }: SEOProps) {
-  const pageTitle = `${title} ${
-    !shouldExcludeTitleSuffix ? '| DevCommerce' : ''
-  }`;
+  const pageTitle = `${title} ${!shouldExcludeTitleSuffix ? '| Venture' : ''}`;
 
   const pageImage = image
     ? `${process.env.NEXT_PUBLIC_SITE_URL}/${image}`

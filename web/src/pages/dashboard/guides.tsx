@@ -1,3 +1,5 @@
+import { GetServerSideProps } from 'next';
+import { parseCookies } from 'nookies';
 import { Flex } from '@chakra-ui/react';
 import { Topbar, Sidebar } from '../../components';
 
@@ -22,3 +24,20 @@ export default function Guides() {
     </Flex>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ['venture.token']: token } = parseCookies(ctx);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
+};

@@ -1,9 +1,9 @@
+import { GetServerSideProps } from 'next';
 import { useAuth } from '../../contexts/AuthContext';
 import { parseCookies } from 'nookies';
 import { Flex } from '@chakra-ui/react';
 import { Topbar, Sidebar } from '../../components';
 import { useRedirect } from '../../hooks/useRedirect';
-import { GetServerSideProps } from 'next';
 
 export default function Dashboard({ id }) {
   const { redirectTo } = useRedirect();
