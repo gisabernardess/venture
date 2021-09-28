@@ -1,18 +1,12 @@
-import { useContext, useEffect } from 'react';
-import { AuthContext } from '../../contexts/AuthContext';
+import { useEffect } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 import { Flex } from '@chakra-ui/react';
 import { Topbar, Sidebar } from '../../components';
 import { useRedirect } from '../../hooks/useRedirect';
 
 export default function Dashboard({ id }) {
   const { redirectTo } = useRedirect();
-  const { user, isAuthenticated } = useContext(AuthContext);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      redirectTo('/');
-    }
-  }, [isAuthenticated]);
+  const { user, isAuthenticated } = useAuth();
 
   return (
     <Flex direction="column" h="100vh">

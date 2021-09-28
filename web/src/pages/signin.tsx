@@ -1,5 +1,4 @@
-import { useContext } from 'react';
-import { AuthContext } from '../contexts/AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -27,7 +26,7 @@ const signInFormSchema = yup.object().shape({
 });
 
 export default function SignIn() {
-  const { signIn } = useContext(AuthContext);
+  const { signIn } = useAuth();
 
   const {
     register,

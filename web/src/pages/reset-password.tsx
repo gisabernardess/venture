@@ -1,3 +1,4 @@
+import { useAuth } from '../contexts/AuthContext';
 import { Flex, Button, Stack, Text } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import * as yup from 'yup';
@@ -14,6 +15,8 @@ const resetPasswordFormSchema = yup.object().shape({
 });
 
 export default function ResetPassword() {
+  const {} = useAuth();
+
   const {
     register,
     handleSubmit,

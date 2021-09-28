@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useState, useContext } from 'react';
 
 import { useNotification } from '../hooks/useNotification';
 
@@ -7,16 +7,15 @@ import { User } from '../models/types';
 
 export type ProviderType = 'GOOGLE' | 'GITHUB' | 'DISCORD';
 
-type SignInCredentials = Pick<User, 'email' | 'password'>;
-
-type SignUpCredentials = Pick<User, 'name' | 'email' | 'password'> & {
-  password_confirmation: string;
+type AuthenticateProps = Pick<Partial<User>, 'name' | 'email' | 'password'> & {
+  password_confirmation?: string;
 };
 
 type AuthContextData = {
+  signIn: (credentials: AuthenticateProps) => void;
+  signUp: (credentials: AuthenticateProps) => void;
   socialAuth: (type: ProviderType) => Promise<void>;
-  signIn: (credentials: SignInCredentials) => Promise<void>;
-  signUp: (credentials: SignUpCredentials) => Promise<void>;
+  logout: () => Promise<void>;
   user: User;
   isAuthenticated: boolean;
 };
@@ -32,6 +31,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const [user, setUser] = useState<User>();
   const isAuthenticated = !!user;
+
+  function signIn(credentials: Pick<AuthenticateProps, 'email' | 'password'>) {
+    authenticate('/login', credentials, { title: 'Successfully logged in!' });
+  }
+
+  function signUp(credentials: AuthenticateProps) {
+    authenticate('/register', credentials, {
+      title: 'Registration successful!',
+    });
+  }
 
   async function socialAuth(type: ProviderType) {
     try {
@@ -68,47 +77,40 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  async function signIn({ email, password }: SignInCredentials) {
+  async function logout() {
     try {
       await api
-        .post('/login', {
-          email,
-          password,
-        })
-        .then(({ data }) => {
-          if (data) setUser(data.user);
+        .post('/logout')
+        .then(() => {
+          setUser(undefined);
           notification.success({
-            title: 'Successfully logged in!',
-            to: `dashboard/${data.user.id}`,
+            title: 'Successfully logged out!',
+            to: '/',
           });
         })
-        .catch(({ response }) => {
-          notification.error(response.data.error);
-        });
+        .catch(({ response }) => notification.error(response.data.error));
     } catch (error) {
       notification.error(error.message);
     }
   }
 
-  async function signUp({
-    name,
-    email,
-    password,
-    password_confirmation,
-  }: SignUpCredentials) {
+  async function authenticate(
+    url: string,
+    credentials: AuthenticateProps,
+    toast?: {
+      title: string;
+    },
+  ) {
     try {
       await api
-        .post('/register', {
-          name,
-          email,
-          password,
-          password_confirmation,
+        .post(url, {
+          ...credentials,
         })
-        .then(({ data }) => {
-          if (data) setUser(data.user);
+        .then(({ data: { user, token } }) => {
+          if (token) setUser(user);
           notification.success({
-            title: 'Registration successful!',
-            to: `dashboard/${data.user.id}`,
+            title: toast.title,
+            to: `dashboard/${user.id}`,
           });
         })
         .catch(({ response }) => {
@@ -121,9 +123,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ socialAuth, signIn, signUp, user, isAuthenticated }}
+      value={{ socialAuth, signIn, signUp, logout, user, isAuthenticated }}
     >
       {children}
     </AuthContext.Provider>
   );
 }
+
+export const useAuth = () => useContext(AuthContext);
