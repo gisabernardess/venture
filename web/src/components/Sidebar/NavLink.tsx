@@ -18,14 +18,9 @@ export function NavLink({ icon, href, ...rest }: NavLinkProps) {
           align="center"
           justify="center"
           borderRadius="4"
-          _hover={{ bg: 'blue.400' }}
+          _hover={{ bg: 'gray.200' }}
         >
-          <Icon
-            as={icon}
-            fontSize="25"
-            color="blue.400"
-            _hover={{ color: 'white' }}
-          />
+          <Icon as={icon} fontSize="25" color="blue.400" />
         </Flex>
       </ChakraLink>
     </ActiveLink>
