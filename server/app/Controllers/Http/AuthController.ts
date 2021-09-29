@@ -1,16 +1,16 @@
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { ResponseContract } from "@ioc:Adonis/Core/Response";
 import { string } from "@ioc:Adonis/Core/Helpers";
+import { AllyDriverContract, Oauth2AccessToken } from "@ioc:Adonis/Addons/Ally";
+import { AuthContract } from "@ioc:Adonis/Addons/Auth";
+
 import { endOfDay } from "date-fns";
 
 import User from "App/Models/User";
-import CreateUserValidator from "App/Validators/CreateUserValidator";
-import { AllyDriverContract, Oauth2AccessToken } from "@ioc:Adonis/Addons/Ally";
-import { AuthContract } from "@ioc:Adonis/Addons/Auth";
-import ResetPasswordValidator from "App/Validators/ResetPasswordValidator";
 import ApiToken from "App/Models/ApiToken";
 
-type AcessToken = Pick<ApiToken, "token" | "expiresAt">;
+import CreateUserValidator from "App/Validators/CreateUserValidator";
+import ResetPasswordValidator from "App/Validators/ResetPasswordValidator";
 
 type OAuthProviderUser = {
   email: string | null;
@@ -166,7 +166,7 @@ export default class AuthController {
 
   /**
    * @swagger
-   * /login:
+   * /reset:
    *   post:
    *     tags:
    *       - auth
@@ -184,7 +184,7 @@ export default class AuthController {
    *                 example: email@domain.com
    *     responses:
    *       200:
-   *         description: login successful
+   *         description: email sent
    *       400:
    *         description: validation fails
    *       404:
@@ -192,20 +192,14 @@ export default class AuthController {
    *       500:
    *         description: server error
    */
-  public async resetPassword({ auth, request, response }: HttpContextContract) {
+  public async resetPassword({ request, response }: HttpContextContract) {
     try {
       const { email } = await request.validate(ResetPasswordValidator);
 
-      const userProvider = await auth.use("api").provider.findByUid(email);
+      const user = await User.findBy("email", email);
+      if (!user) return response.notFound({ error: "User not found!" });
 
-      if (!userProvider.user) {
-        return response.notFound({
-          error: "This email address does not exist",
-        });
-      }
-
-      userProvider.setRememberMeToken(string.generateRandom(10));
-      await auth.use("api").provider.updateRememberMeToken(userProvider);
+      await user.merge({ password: string.generateRandom(8) }).save();
 
       // await Mail.send((message) => {
       //   message
@@ -329,7 +323,7 @@ export default class AuthController {
     auth: AuthContract,
     email: string,
     password: string,
-    activeToken?: AcessToken[]
+    activeToken?: Pick<ApiToken, "token" | "expiresAt">[]
   ) {
     if (activeToken && activeToken?.length > 0) {
       return {
