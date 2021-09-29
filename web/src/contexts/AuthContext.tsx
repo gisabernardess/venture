@@ -43,9 +43,16 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const { ['venture.token']: token } = parseCookies();
 
     if (token) {
-      api.get('/me').then(({ data: { user } }) => setUser(user));
+      const userStore = localStorage.getItem('venture.user');
+      if (userStore) {
+        setUser(JSON.parse(userStore));
+      }
     }
   }, []);
+
+  useEffect(() => {
+    localStorage.setItem('venture.user', JSON.stringify(user));
+  }, [user]);
 
   function signIn(credentials: Pick<AuthenticateProps, 'email' | 'password'>) {
     authenticate('/login', credentials, { title: 'Successfully logged in!' });
@@ -121,14 +128,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .post(url, {
           ...credentials,
         })
-        .then(({ data: { user, token } }) => {
-          setCookie(undefined, 'venture.token', token, {
-            maxAge: 60 * 60 * 24, // 24 hours
+        .then(({ data: { user, access } }) => {
+          setCookie(undefined, 'venture.token', access.token, {
+            maxAge: access.expiresAt ?? 60 * 60 * 24, // 24 hours
           });
 
           setUser(user);
 
-          api.defaults.headers['Authorization'] = `Bearer ${token}`;
+          api.defaults.headers['Authorization'] = `Bearer ${access.token}`;
 
           notification.success({
             title: toast.title,

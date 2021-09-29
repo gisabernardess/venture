@@ -3,7 +3,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
 type ToastProps = {
-  title: string;
+  title?: string;
   message?: string;
   to?: string;
 };
@@ -37,11 +37,11 @@ export const useNotification = () => {
     });
   };
 
-  const error = async ({ message }: ToastProps) => {
+  const error = async (toast: ToastProps) => {
     await Toast.fire({
       icon: 'error',
       title: 'Oops...Something went wrong!',
-      text: message,
+      text: toast?.message ?? '',
     });
   };
 

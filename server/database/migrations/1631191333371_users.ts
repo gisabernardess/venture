@@ -11,8 +11,8 @@ export default class Users extends BaseSchema {
       table.string("email").unique().notNullable();
       table.string("password").notNullable();
       table.string("role").notNullable().defaultTo("PLAYER");
-      table.timestamp("created_at").notNullable();
-      table.timestamp("updated_at").notNullable();
+      table.timestamp("created_at", { useTz: true }).notNullable();
+      table.timestamp("updated_at", { useTz: true }).notNullable();
     });
   }
 

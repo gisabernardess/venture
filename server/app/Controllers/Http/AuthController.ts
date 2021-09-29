@@ -1,12 +1,16 @@
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { ResponseContract } from "@ioc:Adonis/Core/Response";
 import { string } from "@ioc:Adonis/Core/Helpers";
+import { endOfDay } from "date-fns";
 
 import User from "App/Models/User";
 import CreateUserValidator from "App/Validators/CreateUserValidator";
 import { AllyDriverContract, Oauth2AccessToken } from "@ioc:Adonis/Addons/Ally";
 import { AuthContract } from "@ioc:Adonis/Addons/Auth";
 import ResetPasswordValidator from "App/Validators/ResetPasswordValidator";
+import ApiToken from "App/Models/ApiToken";
+
+type AcessToken = Pick<ApiToken, "token" | "expiresAt">;
 
 type OAuthProviderUser = {
   email: string | null;
@@ -14,10 +18,6 @@ type OAuthProviderUser = {
 };
 
 export default class AuthController {
-  public async show({ auth, response }: HttpContextContract) {
-    const { password, ...user } = auth.use("api").user!;
-    return response.ok({ user: user });
-  }
   /**
    * @swagger
    * /register:
@@ -68,9 +68,13 @@ export default class AuthController {
         password,
       });
 
-      const { token } = await this.generateToken(auth, email, password);
+      const { token, expiresAt } = await this.generateToken(
+        auth,
+        email,
+        password
+      );
 
-      return response.ok({ user: user, token: token });
+      return response.ok({ user: user, access: { token, expiresAt } });
     } catch (error) {
       response.notImplemented(error.message);
     }
@@ -112,7 +116,17 @@ export default class AuthController {
     try {
       const { email, password } = request.all();
 
-      const user = await User.findBy("email", email);
+      const user = await User.query()
+        .where({
+          email: email,
+        })
+        .preload("tokens", (query) =>
+          query
+            .where("expiresAt", ">", endOfDay(new Date()))
+            .orderBy("expiresAt", "desc")
+        )
+        .first();
+
       if (!user) return response.notFound({ error: "User not found!" });
 
       if (!(await user.checkPassword(password))) {
@@ -121,9 +135,14 @@ export default class AuthController {
         });
       }
 
-      const { token } = await this.generateToken(auth, email, password);
+      const { token, expiresAt } = await this.generateToken(
+        auth,
+        email,
+        password,
+        user.tokens
+      );
 
-      return response.ok({ user: user, token: token });
+      return response.ok({ user: user, access: { token, expiresAt } });
     } catch (error) {
       response.notImplemented(error);
     }
@@ -309,10 +328,21 @@ export default class AuthController {
   private async generateToken(
     auth: AuthContract,
     email: string,
-    password: string
+    password: string,
+    activeToken?: AcessToken[]
   ) {
-    return await auth.use("api").attempt(email, password, {
-      expiresIn: "24hours",
-    });
+    if (activeToken && activeToken?.length > 0) {
+      return {
+        token: activeToken[0].token,
+        expiresAt: activeToken[0].expiresAt.toSeconds(),
+      };
+    }
+
+    const { token, expiresIn } = await auth
+      .use("api")
+      .attempt(email, password, {
+        expiresIn: "24hours",
+      });
+    return { token, expiresAt: expiresIn };
   }
 }

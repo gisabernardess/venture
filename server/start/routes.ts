@@ -70,7 +70,6 @@ Route.group(() => {
  * Private Routes
  */
 Route.group(() => {
-  Route.get("/me", "AuthController.show");
   Route.put("/users/:id", "UsersController.update");
   Route.delete("/users/:id", "UsersController.destroy");
 }).middleware("auth");
