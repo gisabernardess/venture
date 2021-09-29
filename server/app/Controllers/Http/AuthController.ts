@@ -1,3 +1,4 @@
+import Mail from "@ioc:Adonis/Addons/Mail";
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { ResponseContract } from "@ioc:Adonis/Core/Response";
 import { string } from "@ioc:Adonis/Core/Helpers";
@@ -201,6 +202,17 @@ export default class AuthController {
 
       await user.merge({ password: string.generateRandom(8) }).save();
 
+      await Mail.send((message) => {
+        message
+          .from("admin@venture.vercel.app")
+          .to("giiselebernardes@gmail.com")
+          .subject("Welcome Onboard!")
+          .htmlView("emails/welcome", {
+            user: { fullName: "Some Name" },
+            url: "https://your-app.com/verification-url",
+          });
+      });
+
       // await Mail.send((message) => {
       //   message
       //     .from("no-reply@bio2game.com")
@@ -215,8 +227,9 @@ export default class AuthController {
       //     });
       // }).catch(() => null);
 
-      return response.ok({ success: true });
+      return response.ok({ user: user });
     } catch (error) {
+      console.log(error);
       return response.notImplemented(error);
     }
   }

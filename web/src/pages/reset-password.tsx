@@ -15,7 +15,7 @@ const resetPasswordFormSchema = yup.object().shape({
 });
 
 export default function ResetPassword() {
-  const {} = useAuth();
+  const { resetPassword } = useAuth();
 
   const {
     register,
@@ -28,7 +28,7 @@ export default function ResetPassword() {
   const handleResetPassword: SubmitHandler<ResetPasswordFormData> = async (
     values,
   ) => {
-    alert('Email sent');
+    await resetPassword(values);
   };
 
   return (

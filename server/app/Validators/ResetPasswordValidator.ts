@@ -9,7 +9,6 @@ export default class ResetPasswordValidator {
       rules.email({
         sanitize: true, // transform the local part of the email (before the @ symbol) to all lowercase.
       }),
-      rules.unique({ table: "users", column: "email" }),
     ]),
   });
 

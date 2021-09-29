@@ -22,6 +22,7 @@ type AuthContextData = {
   signIn: (credentials: AuthenticateProps) => void;
   signUp: (credentials: AuthenticateProps) => void;
   socialAuth: (type: ProviderType) => Promise<void>;
+  resetPassword: (credentials: AuthenticateProps) => Promise<void>;
   logout: () => Promise<void>;
   user: User;
   isAuthenticated: boolean;
@@ -118,6 +119,23 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
+  async function resetPassword(credentials: Pick<AuthenticateProps, 'email'>) {
+    try {
+      await api
+        .post('/reset', { ...credentials })
+        .then(({ data: { user } }) => {
+          setUser(user);
+          notification.success({
+            title: 'Email sent successfully!',
+            to: '/',
+          });
+        })
+        .catch(({ response }) => notification.error(response.data.error));
+    } catch (error) {
+      notification.error(error.message);
+    }
+  }
+
   async function authenticate(
     url: string,
     credentials: AuthenticateProps,
@@ -154,7 +172,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   return (
     <AuthContext.Provider
-      value={{ socialAuth, signIn, signUp, logout, user, isAuthenticated }}
+      value={{
+        socialAuth,
+        signIn,
+        signUp,
+        logout,
+        resetPassword,
+        user,
+        isAuthenticated,
+      }}
     >
       {children}
     </AuthContext.Provider>
