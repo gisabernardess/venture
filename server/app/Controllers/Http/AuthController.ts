@@ -320,7 +320,7 @@ export default class AuthController {
       return response.status(400).send({ error: "Invalid account." });
     }
 
-    const user = User.firstOrCreate(
+    const user = await User.firstOrCreate(
       { email: providerUser.email },
       {
         name: providerUser.name,
@@ -329,7 +329,9 @@ export default class AuthController {
       }
     );
 
-    await auth.use("api").login(user);
+    const token = await auth.use("api").login(user);
+
+    return response.ok({ user, token: token.toJSON() });
   }
 
   private async generateToken(

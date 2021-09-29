@@ -14,6 +14,11 @@ import { User } from '../models/types';
 
 export type ProviderType = 'GOOGLE' | 'GITHUB' | 'DISCORD';
 
+export type SocialAuthParams = {
+  provider: ProviderType;
+  code: string;
+};
+
 type AuthenticateProps = Pick<Partial<User>, 'name' | 'email' | 'password'> & {
   password_confirmation?: string;
 };
@@ -21,7 +26,8 @@ type AuthenticateProps = Pick<Partial<User>, 'name' | 'email' | 'password'> & {
 type AuthContextData = {
   signIn: (credentials: AuthenticateProps) => void;
   signUp: (credentials: AuthenticateProps) => void;
-  socialAuth: (type: ProviderType) => Promise<void>;
+  socialAuthRedirect: (provider: ProviderType) => Promise<void>;
+  socialAuthCallback: (params: SocialAuthParams) => Promise<void>;
   resetPassword: (credentials: AuthenticateProps) => Promise<void>;
   logout: () => Promise<void>;
   user: User;
@@ -65,14 +71,25 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
   }
 
-  async function socialAuth(type: ProviderType) {
+  async function socialAuthRedirect(provider: ProviderType) {
+    // TODO: create a config for the API URL
+    window.location.assign(
+      `http://localhost:3333/${provider.toLowerCase()}/redirect`,
+    );
+  }
+
+  async function socialAuthCallback({ provider, code }: SocialAuthParams) {
     try {
-      switch (type) {
+      switch (provider) {
         case 'GITHUB':
           await api
-            .get('/github/redirect')
-            .then(({ data: github }) => {
-              console.log(github);
+            .get('/github/callback', { params: { code } })
+            .then(({ data }) => {
+              if (data) setUser(data.user);
+              notification.success({
+                title: 'Successfully logged in!',
+                to: `/dashboard/${data.user.id}`,
+              });
             })
             .catch(({ response }) => console.log(response));
           break;
@@ -173,7 +190,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   return (
     <AuthContext.Provider
       value={{
-        socialAuth,
+        socialAuthRedirect,
+        socialAuthCallback,
         signIn,
         signUp,
         logout,
