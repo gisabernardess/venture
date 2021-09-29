@@ -8,19 +8,19 @@ export default class UserSeeder extends BaseSeeder {
     await User.updateOrCreateMany(uniqueKey, [
       {
         name: "Admin",
-        email: "admin@venture.com",
+        email: "admin@venture.vercel.app",
         role: "ADMIN",
         password: "adminadmin",
       },
       {
         name: "Moderator",
-        email: "moderator@venture.com",
+        email: "moderator@venture.vercel.app",
         role: "MODERATOR",
         password: "moderator",
       },
       {
         name: "Player",
-        email: "player@venture.com",
+        email: "player@venture.vercel.app",
         password: "playerzero",
       },
     ]);

@@ -31,11 +31,6 @@ export default function Dashboard({ id }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  /**
-   * for server-side requests:
-   * const apiClient = getAPIClient(ctx);
-   * await apiClient.get('/users');
-   */
   const { ['venture.token']: token } = parseCookies(ctx);
 
   if (!token) {
