@@ -9,7 +9,7 @@ import { NavLink } from './NavLink';
 import { Role } from '../../models/enums';
 
 export function SidebarNav() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <Stack
@@ -28,7 +28,7 @@ export function SidebarNav() {
         )}
         <NavLink icon={FaBook} href="/dashboard/guides" />
       </Flex>
-      <NavLink icon={BiLogOut} href="/" />
+      <NavLink icon={BiLogOut} href="/" onClick={() => logout()} />
       <NavLink icon={AiOutlineQuestionCircle} href="/faq" />
     </Stack>
   );

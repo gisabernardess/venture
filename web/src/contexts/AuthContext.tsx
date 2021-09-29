@@ -5,7 +5,7 @@ import {
   useContext,
   useEffect,
 } from 'react';
-import { setCookie, parseCookies } from 'nookies';
+import { setCookie, parseCookies, destroyCookie } from 'nookies';
 
 import { useNotification } from '../hooks/useNotification';
 
@@ -104,7 +104,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
       await api
         .post('/logout')
         .then(() => {
+          destroyCookie(undefined, 'venture.token');
           setUser(null);
+
           notification.success({
             title: 'Successfully logged out!',
             to: '/',
