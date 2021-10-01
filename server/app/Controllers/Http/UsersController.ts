@@ -1,6 +1,7 @@
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 
 import User from "App/Models/User";
+import CreateUserValidator from "App/Validators/CreateUserValidator";
 
 export default class UsersController {
   /**
@@ -47,6 +48,67 @@ export default class UsersController {
   public async show({ request }: HttpContextContract) {
     const { id } = request.params();
     return await User.findOrFail(id);
+  }
+
+  /**
+   * @swagger
+   * /register:
+   *   post:
+   *     tags:
+   *       - auth
+   *     summary: creates a user
+   *     requestBody:
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required:
+   *               - name
+   *               - email
+   *               - password
+   *               - password_confirmation
+   *             properties:
+   *               name:
+   *                 type: string
+   *                 example: Jane Doe
+   *               email:
+   *                 type: string
+   *                 example: email@domain.com
+   *               role:
+   *                 type: string
+   *                 enum:
+   *                   - PLAYER
+   *                   - MODERATOR
+   *                   - ADMIN
+   *               password:
+   *                 type: string
+   *                 format: password
+   *               password_confirmation:
+   *                 type: string
+   *                 format: password
+   *     responses:
+   *       201:
+   *         description: user created
+   *       400:
+   *         description: validation fails
+   *       501:
+   *         description: not implemented
+   */
+  public async create({ request, response }: HttpContextContract) {
+    try {
+      const { name, email, role, password } = await request.validate(
+        CreateUserValidator
+      );
+
+      return await User.create({
+        name,
+        email,
+        role: role ?? "PLAYER",
+        password,
+      });
+    } catch (error) {
+      response.notImplemented(error.message);
+    }
   }
 
   /**

@@ -25,7 +25,7 @@ export default class AuthController {
    *   post:
    *     tags:
    *       - auth
-   *     summary: creates a user
+   *     summary: register a user
    *     requestBody:
    *       content:
    *         application/json:

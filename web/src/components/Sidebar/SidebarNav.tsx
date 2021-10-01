@@ -6,7 +6,7 @@ import { BiHomeAlt, BiUser, BiGroup, BiLogOut } from 'react-icons/bi';
 import { HiOutlineChatAlt2 } from 'react-icons/hi';
 
 import { NavLink } from './NavLink';
-import { Role } from '../../models/enums';
+import { UserRole } from '../../models/enums';
 
 export function SidebarNav() {
   const { user, logout } = useAuth();
@@ -23,8 +23,8 @@ export function SidebarNav() {
         <NavLink icon={BiHomeAlt} href="/dashboard/1" />
         <NavLink icon={BiUser} href="/dashboard/profile/1" />
         <NavLink icon={HiOutlineChatAlt2} href="/dashboard/forum" />
-        {user?.role === Role.ADMIN && (
-          <NavLink icon={BiGroup} href="/dashboard/permissions" />
+        {user?.role === UserRole.ADMIN && (
+          <NavLink icon={BiGroup} href="/dashboard/users" />
         )}
         <NavLink icon={FaBook} href="/dashboard/guides" />
       </Flex>

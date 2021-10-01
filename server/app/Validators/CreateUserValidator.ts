@@ -12,6 +12,7 @@ export default class CreateUserValidator {
       }),
       rules.unique({ table: "users", column: "email" }),
     ]),
+    role: schema.string.optional({ trim: true }),
     password: schema.string({}, [
       rules.confirmed("password_confirmation"),
       rules.minLength(8),
