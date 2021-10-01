@@ -1,18 +1,15 @@
-import { useAuth } from '../contexts/AuthContext';
-import { Flex, Button, Stack, Text } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Flex, Button, Stack, Text } from '@chakra-ui/react';
 
-import { Input, Container } from '../components';
+import { useAuth } from '../contexts/AuthContext';
 
-type ResetPasswordFormData = {
-  email: string;
-};
+import {
+  ResetPasswordFormData,
+  resetPasswordFormSchema,
+} from '../validators/ResetPasswordValidator';
 
-const resetPasswordFormSchema = yup.object().shape({
-  email: yup.string().required('Email is required').email('Invalid email'),
-});
+import { Input, SignContainer } from '../components';
 
 export default function ResetPassword() {
   const { resetPassword } = useAuth();
@@ -32,7 +29,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <Container image="game-forgotpass">
+    <SignContainer image="game-forgotpass">
       <Flex w="100%" maxW={360} flexDir="column" p="8">
         <Text
           as="span"
@@ -70,6 +67,6 @@ export default function ResetPassword() {
           </Button>
         </Flex>
       </Flex>
-    </Container>
+    </SignContainer>
   );
 }

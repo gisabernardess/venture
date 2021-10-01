@@ -1,24 +1,23 @@
-import { useAuth } from '../contexts/AuthContext';
-
 import { SubmitHandler, useForm } from 'react-hook-form';
-
 import { yupResolver } from '@hookform/resolvers/yup';
-
 import { Flex, Button, Stack } from '@chakra-ui/react';
 import { FaGithub, FaDiscord } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 
-import {
-  Input,
-  Container,
-  Divider,
-  SocialButton,
-  TextLink,
-} from '../components';
+import { useAuth } from '../contexts/AuthContext';
+
 import {
   SignUpFormData,
   signUpFormSchema,
 } from '../validators/SignUpUserValidator';
+
+import {
+  Input,
+  SignContainer,
+  Divider,
+  SocialButton,
+  TextLink,
+} from '../components';
 
 export default function SignUp() {
   const { signUp } = useAuth();
@@ -40,7 +39,7 @@ export default function SignUp() {
   };
 
   return (
-    <Container image="game-signup">
+    <SignContainer image="game-signup">
       <Flex w="100%" maxW={360} flexDir="column" p="8">
         <SocialButton
           icon={FcGoogle}
@@ -110,6 +109,6 @@ export default function SignUp() {
         </Flex>
         <TextLink label="Already have an account?" href="/signin" />
       </Flex>
-    </Container>
+    </SignContainer>
   );
 }

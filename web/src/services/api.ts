@@ -1,4 +1,4 @@
 import { getAPIClient } from './axios';
 
-// para todas as requests a partir do browser
+// for all requests from the browser
 export const api = getAPIClient();

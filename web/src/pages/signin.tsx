@@ -1,29 +1,23 @@
-import { useAuth } from '../contexts/AuthContext';
-
 import { SubmitHandler, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 import { Flex, Button, Stack } from '@chakra-ui/react';
 import { FaGithub, FaDiscord } from 'react-icons/fa';
 import { FcGoogle } from 'react-icons/fc';
 
+import { useAuth } from '../contexts/AuthContext';
+
+import {
+  SignInFormData,
+  signInFormSchema,
+} from '../validators/SignInUserValidator';
+
 import {
   Input,
-  Container,
+  SignContainer,
   Divider,
   SocialButton,
   TextLink,
 } from '../components';
-
-import { User } from '../models/types';
-
-type SignInFormData = Pick<User, 'email' | 'password'>;
-
-const signInFormSchema = yup.object().shape({
-  email: yup.string().required('Email is required').email('Invalid email'),
-  password: yup.string().required('Password is required').min(8),
-});
 
 export default function SignIn() {
   const { signIn } = useAuth();
@@ -41,7 +35,7 @@ export default function SignIn() {
   };
 
   return (
-    <Container image="game-signin">
+    <SignContainer image="game-signin">
       <Flex w="100%" maxW={360} flexDir="column" p="8">
         <SocialButton
           icon={FcGoogle}
@@ -98,6 +92,6 @@ export default function SignIn() {
         <TextLink label="Forgot my password" href="/reset-password" />
         <TextLink label="Create a new account" href="/signup" />
       </Flex>
-    </Container>
+    </SignContainer>
   );
 }

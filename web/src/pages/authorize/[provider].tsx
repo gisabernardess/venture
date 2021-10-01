@@ -1,7 +1,8 @@
-import { useEffect } from 'react';
 import { GetServerSideProps } from 'next';
-import { Flex } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { Flex } from '@chakra-ui/react';
+
 import { SocialAuthParams, useAuth } from '../../contexts/AuthContext';
 
 export default function Authorize({ provider }) {

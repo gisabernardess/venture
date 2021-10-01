@@ -3,12 +3,12 @@ import React, { ReactElement } from 'react';
 import { BackButton } from '..';
 import { Logo } from '../Header/Logo';
 
-interface ContainerProps {
+interface SignContainerProps {
   image: string;
   children: ReactElement;
 }
 
-export function Container({ image, children }: ContainerProps) {
+export function SignContainer({ image, children }: SignContainerProps) {
   return (
     <Flex w="100vw" h="100vh">
       <Flex as="aside" w="680px" alignItems="flex-end">
