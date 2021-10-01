@@ -1,6 +1,6 @@
 import { Button, Icon } from '@chakra-ui/react';
 import { ElementType } from 'react';
-import { useAuth, ProviderType } from '../../contexts/AuthContext';
+import { ProviderType, useAuth } from '../../contexts/AuthContext';
 
 interface SocialButtonProps {
   icon: ElementType;
@@ -15,7 +15,7 @@ export function SocialButton({
   action,
   provider,
 }: SocialButtonProps) {
-  const { socialAuth } = useAuth();
+  const { socialAuthRedirect } = useAuth();
 
   return (
     <Button
@@ -24,7 +24,7 @@ export function SocialButton({
       leftIcon={<Icon as={icon} fontSize="25" />}
       _hover={{ bg: 'white' }}
       m={1}
-      onClick={() => socialAuth(provider)}
+      onClick={() => socialAuthRedirect(provider)}
     >
       {`${action} with ${name}`}
     </Button>
