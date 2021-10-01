@@ -85,11 +85,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
           await api
             .get('/github/callback', { params: { code } })
             .then(({ data }) => {
-              if (data) setUser(data.user);
-              notification.success({
-                title: 'Successfully logged in!',
-                to: `/dashboard/${data.user.id}`,
-              });
+              if (data) {
+                setUser(data.user);
+                notification.success({
+                  title: 'Successfully logged in!',
+                  to: `/dashboard/${data.user.id}`,
+                });
+              }
             })
             .catch(({ response }) => console.log(response));
           break;

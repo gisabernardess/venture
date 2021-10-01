@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { GetServerSideProps } from 'next';
 import { Flex } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
@@ -9,10 +10,15 @@ export default function Authorize({ provider }) {
   const router = useRouter();
   const params = router.query as SocialAuthParams;
 
-  if (provider && params.code) {
-    console.log({ provider: provider.toUpperCase(), code: params.code });
-    socialAuthCallback({ provider: provider.toUpperCase(), code: params.code });
-  }
+  useEffect(() => {
+    if (provider && params.code) {
+      socialAuthCallback({
+        provider: provider.toUpperCase(),
+        code: params.code,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Flex direction="column" minH="100vh">
