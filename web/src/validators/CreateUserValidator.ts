@@ -8,7 +8,7 @@ export const createUserFormSchema = yup.object().shape({
   password_confirmation: yup
     .string()
     .when('password', (password, field) =>
-      password ? field.required('Passwords do not match') : field,
+      password ? field.required('Password does not match') : field,
     ),
 });
 

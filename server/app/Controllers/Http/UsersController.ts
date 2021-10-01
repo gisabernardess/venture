@@ -161,33 +161,37 @@ export default class UsersController {
    *         description: user not found
    */
   public async update({ request, response }: HttpContextContract) {
-    const { id, avatarUrl, name, email, oldPassword, password, role } =
-      request.all();
+    try {
+      const { id, avatarUrl, name, email, oldPassword, password, role } =
+        request.all();
 
-    const user = await User.find(id);
-    if (!user) return response.status(404).send({ error: "User not found" });
+      const user = await User.find(id);
+      if (!user) return response.status(404).send({ error: "User not found" });
 
-    if (email && email !== user.email) {
-      const userExists = await User.find({ where: { email } });
-      if (userExists)
-        return response.status(400).send({ error: "User already exists!" });
+      if (email && email !== user.email) {
+        const userExists = await User.find({ where: { email } });
+        if (userExists)
+          return response.status(400).send({
+            error: "There is a user with this email. Try another one",
+          });
+      }
+
+      if (oldPassword && !(await user.checkPassword(oldPassword))) {
+        return response.status(400).send({ error: "Invalid current password" });
+      }
+
+      return await user
+        .merge({
+          avatarUrl,
+          name,
+          email,
+          password,
+          role,
+        })
+        .save();
+    } catch (error) {
+      response.notImplemented(error.message);
     }
-
-    if (oldPassword && !(await user.checkPassword(oldPassword))) {
-      return response.status(400).send({ error: "Password does not match!" });
-    }
-
-    await user
-      .merge({
-        avatarUrl,
-        name,
-        email,
-        password,
-        role,
-      })
-      .save();
-
-    return user;
   }
 
   /**

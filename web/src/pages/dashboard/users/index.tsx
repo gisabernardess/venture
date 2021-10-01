@@ -29,6 +29,7 @@ import { User } from '../../../models/types';
 
 import { Topbar, Sidebar, Pagination } from '../../../components';
 import { useNotification } from '../../../hooks/useNotification';
+import { useAuth } from '../../../contexts/AuthContext';
 
 interface PermissionsProps {
   users: User[];
@@ -36,6 +37,7 @@ interface PermissionsProps {
 }
 
 export default function Users({ users, totalCount }: PermissionsProps) {
+  const { user: currentUser } = useAuth();
   const notification = useNotification();
   const [listOfUsers, setListOfUsers] = useState<User[]>(users);
   const [currentPage, setCurrentPage] = useState(1);
@@ -130,13 +132,18 @@ export default function Users({ users, totalCount }: PermissionsProps) {
                         <Td>{user.role}</Td>
                         <Td>
                           <HStack>
-                            <Button size="sm" fontSize="sm" variant="ghost">
-                              <Icon
-                                as={AiFillEdit}
-                                fontSize="20"
-                                color="red.500"
-                              />
-                            </Button>
+                            <NextLink
+                              href={`/dashboard/users/${user.id}`}
+                              passHref
+                            >
+                              <Button size="sm" fontSize="sm" variant="ghost">
+                                <Icon
+                                  as={AiFillEdit}
+                                  fontSize="20"
+                                  color="red.500"
+                                />
+                              </Button>
+                            </NextLink>
                             <Button
                               size="sm"
                               fontSize="sm"

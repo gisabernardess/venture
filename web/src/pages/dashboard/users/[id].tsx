@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { GetServerSideProps } from 'next';
+import { parseCookies } from 'nookies';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -13,18 +15,24 @@ import {
 } from '@chakra-ui/react';
 
 import { api } from '../../../services/api';
+import { getAPIClient } from '../../../services/axios';
 
 import { UserRole } from '../../../models/enums';
 import {
-  CreateUserFormData,
-  createUserFormSchema,
-} from '../../../validators/CreateUserValidator';
+  UpdateUserFormData,
+  updateUserFormSchema,
+} from '../../../validators/UpdateUserValidator';
 import { useNotification } from '../../../hooks/useNotification';
 
 import { Sidebar, Topbar } from '../../../components';
 import { Input, Select } from '../../../components/Form';
+import { User } from '../../../models/types';
 
-export default function CreateUser() {
+interface UpdateUserProps {
+  user: User;
+}
+
+export default function UpdateUser({ user }: UpdateUserProps) {
   const notification = useNotification();
 
   const {
@@ -32,20 +40,21 @@ export default function CreateUser() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: yupResolver(createUserFormSchema),
+    resolver: yupResolver(updateUserFormSchema),
   });
 
-  const handleCreateUser: SubmitHandler<CreateUserFormData> = async (
+  const handleUpdateUser: SubmitHandler<UpdateUserFormData> = async (
     values,
   ) => {
     try {
       await api
-        .post('/users', {
+        .put(`/users/${user.id}`, {
+          id: user.id,
           ...values,
         })
-        .then(({ data: { user } }) => {
+        .then(() => {
           notification.success({
-            title: 'User created successfully',
+            title: 'User updated successfully',
             to: '/dashboard/users',
           });
         })
@@ -69,10 +78,10 @@ export default function CreateUser() {
             flex="1"
             borderRadius={8}
             p={['6', '8']}
-            onSubmit={handleSubmit(handleCreateUser)}
+            onSubmit={handleSubmit(handleUpdateUser)}
           >
             <Heading size="lg" fontWeight="normal">
-              Create user
+              Update user
             </Heading>
 
             <Divider my="6" borderColor="gray.700" />
@@ -86,6 +95,7 @@ export default function CreateUser() {
 
               <SimpleGrid minChildWidth="240px" spacing={['6', '8']} w="100%">
                 <Input
+                  defaultValue={user?.name}
                   name="name"
                   type="text"
                   placeholder="Name"
@@ -93,6 +103,7 @@ export default function CreateUser() {
                   {...register('name')}
                 />
                 <Input
+                  defaultValue={user?.email}
                   name="email"
                   type="email"
                   placeholder="Email"
@@ -103,6 +114,7 @@ export default function CreateUser() {
 
               <SimpleGrid minChildWidth="240px" spacing={['6', '8']} w="100%">
                 <Select
+                  defaultValue={user?.role}
                   name="role"
                   options={[
                     {
@@ -130,6 +142,13 @@ export default function CreateUser() {
               </SimpleGrid>
 
               <SimpleGrid minChildWidth="240px" spacing={['6', '8']} w="100%">
+                <Input
+                  name="oldPassword"
+                  type="password"
+                  placeholder="Current Password"
+                  error={errors.oldPassword}
+                  {...register('oldPassword')}
+                />
                 <Input
                   name="password"
                   type="password"
@@ -170,3 +189,25 @@ export default function CreateUser() {
     </Flex>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const apiClient = getAPIClient(ctx);
+
+  const { ['venture.token']: token } = parseCookies(ctx);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false,
+      },
+    };
+  }
+
+  const { params } = ctx;
+  const { data } = await apiClient.get(`/users/${params.id}`);
+
+  return {
+    props: { user: data },
+  };
+};
