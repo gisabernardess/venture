@@ -86,6 +86,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
             .get('/github/callback', { params: { code } })
             .then(({ data }) => {
               if (data) {
+                setCookie(undefined, 'venture.token', data.access.token, {
+                  maxAge: data.access.expiresAt ?? 60 * 60 * 24, // 24 hours
+                });
                 setUser(data.user);
                 notification.success({
                   title: 'Successfully logged in!',
@@ -126,7 +129,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .then(() => {
           destroyCookie(undefined, 'venture.token');
           setUser(null);
-
           notification.success({
             title: 'Successfully logged out!',
             to: '/',

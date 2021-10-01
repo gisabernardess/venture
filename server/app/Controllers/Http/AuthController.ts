@@ -329,9 +329,12 @@ export default class AuthController {
       }
     );
 
-    const token = await auth.use("api").login(user);
+    const { token, expiresIn } = await auth.use("api").login(user);
 
-    return response.ok({ user, token: token.toJSON() });
+    return response.ok({
+      user,
+      access: { token, expiresAt: expiresIn },
+    });
   }
 
   private async generateToken(
