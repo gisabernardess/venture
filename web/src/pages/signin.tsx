@@ -1,30 +1,26 @@
-import { useRouter } from 'next/router';
-import { Flex, Button, Stack, Icon } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Flex, Button, Stack } from '@chakra-ui/react';
+import { FaGithub, FaDiscord } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
+
+import { useAuth } from '../contexts/AuthContext';
+
+import {
+  SignInFormData,
+  signInFormSchema,
+} from '../validators/SignInUserValidator';
 
 import {
   Input,
-  Container,
+  SignContainer,
   Divider,
-  GoogleButton,
+  SocialButton,
   TextLink,
 } from '../components';
-import { isEmpty } from '../utils';
-
-type SignInFormData = {
-  email: string;
-  password: string;
-};
-
-const signInFormSchema = yup.object().shape({
-  email: yup.string().required('Email is required').email('Invalid email'),
-  password: yup.string().required('Password is required'),
-});
 
 export default function SignIn() {
-  const router = useRouter();
+  const { signIn } = useAuth();
 
   const {
     register,
@@ -35,15 +31,30 @@ export default function SignIn() {
   });
 
   const handleSignIn: SubmitHandler<SignInFormData> = async (values) => {
-    if (isEmpty(errors)) {
-      router.push(`/dashboard/1`);
-    }
+    await signIn(values);
   };
 
   return (
-    <Container image="game-signin">
+    <SignContainer image="game-signin">
       <Flex w="100%" maxW={360} flexDir="column" p="8">
-        <GoogleButton label="Sign In" />
+        <SocialButton
+          icon={FcGoogle}
+          name="Google"
+          action="Sign In"
+          provider="GOOGLE"
+        />
+        <SocialButton
+          icon={FaGithub}
+          name="Github"
+          action="Sign In"
+          provider="GITHUB"
+        />
+        <SocialButton
+          icon={FaDiscord}
+          name="Discord"
+          action="Sign In"
+          provider="DISCORD"
+        />
         <Divider />
         <Flex
           as="form"
@@ -81,6 +92,6 @@ export default function SignIn() {
         <TextLink label="Forgot my password" href="/reset-password" />
         <TextLink label="Create a new account" href="/signup" />
       </Flex>
-    </Container>
+    </SignContainer>
   );
 }

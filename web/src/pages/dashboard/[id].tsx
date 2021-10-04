@@ -1,30 +1,36 @@
-import { Flex } from '@chakra-ui/react';
-import { Topbar, Sidebar } from '../../components';
+import { GetServerSideProps } from 'next';
+import { parseCookies } from 'nookies';
+import { Text } from '@chakra-ui/react';
+
+import { useAuth } from '../../contexts/AuthContext';
+
+import { PageContainer } from '../../components';
 
 export default function Dashboard({ id }) {
-  return (
-    <Flex direction="column" h="100vh">
-      <Topbar />
+  const { user } = useAuth();
 
-      <Flex w="100%" h="100vh" mx="auto">
-        <Sidebar />
-        <Flex
-          w="100%"
-          my="4"
-          maxW={960}
-          mx="auto"
-          px="6"
-          border="1px solid yellow"
-        >
-          {`Dashboard ${id}`}
-        </Flex>
-      </Flex>
-    </Flex>
+  return (
+    <PageContainer>
+      <Text>{`Welcome ${user?.name}, ID ${id}`}</Text>
+    </PageContainer>
   );
 }
 
-export async function getServerSideProps({ params }) {
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { ['venture.token']: token } = parseCookies(ctx);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false,
+      },
+    };
+  }
+
+  const { params } = ctx;
+
   return {
     props: { id: params.id },
   };
-}
+};

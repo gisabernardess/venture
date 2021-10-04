@@ -28,13 +28,21 @@ export function Footer() {
         justify="center"
         spacing={3}
       >
-        <HStack>
+        <Stack direction={['column', 'row']} alignItems={['center']}>
           <Logo />
           <Text>© 2021 Gisele Bernardes da Silva</Text>
-        </HStack>
+        </Stack>
         <HStack>
-          <IconButton icon={{ icon: FaGithub }} href={config.projectUrl} />
-          <IconButton icon={{ icon: FaLinkedin }} href={config.linkedInUrl} />
+          <IconButton
+            variant="link"
+            icon={{ icon: FaGithub }}
+            href={config.projectUrl}
+          />
+          <IconButton
+            variant="link"
+            icon={{ icon: FaLinkedin }}
+            href={config.linkedInUrl}
+          />
         </HStack>
       </Stack>
     </Flex>

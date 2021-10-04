@@ -1,5 +1,4 @@
-import axios from 'axios';
+import { getAPIClient } from './axios';
 
-export const api = axios.create({
-  baseURL: '',
-});
+// for all requests from the browser
+export const api = getAPIClient();

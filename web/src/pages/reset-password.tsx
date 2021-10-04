@@ -1,19 +1,19 @@
-import { Flex, Button, Stack, Text } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Flex, Button, Stack, Text } from '@chakra-ui/react';
 
-import { Input, Container } from '../components';
+import { useAuth } from '../contexts/AuthContext';
 
-type ResetPasswordFormData = {
-  email: string;
-};
+import {
+  ResetPasswordFormData,
+  resetPasswordFormSchema,
+} from '../validators/ResetPasswordValidator';
 
-const resetPasswordFormSchema = yup.object().shape({
-  email: yup.string().required('Email is required').email('Invalid email'),
-});
+import { Input, SignContainer } from '../components';
 
 export default function ResetPassword() {
+  const { resetPassword } = useAuth();
+
   const {
     register,
     handleSubmit,
@@ -25,11 +25,11 @@ export default function ResetPassword() {
   const handleResetPassword: SubmitHandler<ResetPasswordFormData> = async (
     values,
   ) => {
-    alert('Email sent');
+    await resetPassword(values);
   };
 
   return (
-    <Container image="game-forgotpass">
+    <SignContainer image="game-forgotpass">
       <Flex w="100%" maxW={360} flexDir="column" p="8">
         <Text
           as="span"
@@ -38,7 +38,7 @@ export default function ResetPassword() {
           mb="10"
           textAlign="center"
         >
-          Your password reset will be sent to the registered email.
+          Your password reset will be shown if the registered email exists.
         </Text>
         <Flex
           as="form"
@@ -67,6 +67,6 @@ export default function ResetPassword() {
           </Button>
         </Flex>
       </Flex>
-    </Container>
+    </SignContainer>
   );
 }

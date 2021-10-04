@@ -13,7 +13,7 @@ interface CardProps {
 export function Card({ icon, title, description }: CardProps) {
   return (
     <Stack
-      w="2xs"
+      w={{ base: '2xs', lg: '3xs', xl: '2xs' }}
       h="2xs"
       p="6"
       bg="blue.800"

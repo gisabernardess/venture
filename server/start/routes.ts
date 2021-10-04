@@ -20,12 +20,57 @@
 
 import Route from "@ioc:Adonis/Core/Route";
 
-Route.get("users", "UsersController.index");
+Route.get("/", ({ response }) => {
+  response.send({
+    info: {
+      title: "Venture",
+      subtitle: "Player management for online tabletop RPG games",
+      description:
+        "Final project of the Graduate Course in Full Stack Web Development at the Pontifical Catholic University of Minas Gerais as a requirement for obtaining the graduate degree.",
+    },
+    specification: "/docs",
+  });
+});
 
-Route.post("/users", "UsersController.store");
+/**
+ * Auth Routes
+ */
+Route.group(() => {
+  Route.post("/register", "AuthController.register");
+  Route.post("/login", "AuthController.login");
+  Route.post("/logout", "AuthController.logout");
+  Route.post("/reset", "AuthController.resetPassword");
 
-Route.get("/users/:id", "UsersController.show");
+  Route.get("/github/redirect", async ({ ally }) => {
+    return ally.use("github").redirect();
+  });
 
-Route.put("/users/:id", "UsersController.update");
+  Route.get("/discord/redirect", async ({ ally }) => {
+    return ally.use("discord").redirect();
+  });
 
-Route.delete("/users/:id", "UsersController.destroy");
+  Route.get("/google/redirect", async ({ ally }) => {
+    return ally.use("google").redirect();
+  });
+
+  Route.get("/github/callback", "AuthController.githubAuthentication");
+  Route.get("/discord/callback", "AuthController.discordAuthentication");
+  Route.get("/google/callback", "AuthController.googleAuthentication");
+});
+
+/**
+ * Public Routes
+ */
+Route.group(() => {
+  Route.get("/users", "UsersController.index");
+  Route.get("/users/:id", "UsersController.show");
+});
+
+/**
+ * Private Routes
+ */
+Route.group(() => {
+  Route.post("/users", "UsersController.create");
+  Route.put("/users/:id", "UsersController.update");
+  Route.delete("/users/:id", "UsersController.destroy");
+}).middleware("auth");

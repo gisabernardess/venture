@@ -15,6 +15,7 @@
   <a href="#-project">Project</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-technologies">Technologies</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-layout">Layout</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+  <a href="#-project-specification">Project Specification</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-how-to-use">How To Use</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
   <a href="#-license">License</a>&nbsp;
 </p>
@@ -34,17 +35,23 @@ Finally, the proposal for this project is the development of the web application
 Project developed with the main following technologies:
 
 - [Create Next App](https://nextjs.org/docs/api-reference/create-next-app)
-- [React](https://reactjs.org)
+- [React.js](https://reactjs.org)
 - [TypeScript](https://www.typescriptlang.org/)
 - [Chakra UI](https://chakra-ui.com/)
+- [Node.js](https://nodejs.org/en/)
+- [Adonis.js](https://adonisjs.com/)
 
 ## 🔖 Layout
 
 You can view the layout of the project in the <a href="https://www.figma.com/file/n0HOpITD6ktjuBjSr5R8Eb/Venture?node-id=0%3A1" rel="nofollow">web</a> version. You need to have a <a href="https://www.figma.com/" rel="nofollow">Figma</a> account to access it.
 
+## 🔖 Project Specification
+
+You can view the project specification in the [EN](https://github.com/gisabernardess/venture/wiki/specification) and [PT-BR](https://github.com/gisabernardess/venture/wiki/especificacao) versions.
+
 ## ℹ️ How To Use
 
-To clone and run this application, you'll need [Git](https://git-scm.com) and [Yarn](https://legacy.yarnpkg.com). From your command line:
+To clone and run this application, you'll need [Git](https://git-scm.com), [Yarn](https://legacy.yarnpkg.com) and [Node.js](https://nodejs.org/en/) >= 14.16. From your command line:
 
 ```bash
 # Clone the repository
@@ -73,8 +80,20 @@ $ yarn dev
 # Go into the repository
 $ cd venture/server
 
+# Install dependencies
+$ yarn
+
+# Start docker container for Postgres
+# Create the .env file in the repository using the sample file .env.example
+
 # Run the development server
-$ node ace serve --watch
+$ yarn dev
+
+# Run the migrations
+$ node ace migration:run
+
+# Navigate to http://localhost:3333
+# The app will automatically reload if you change any of the source files.
 ```
 
 ## 📝 License

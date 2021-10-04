@@ -1,32 +1,26 @@
-import { useRouter } from 'next/router';
-import { Flex, Button, Stack, Icon } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Flex, Button, Stack } from '@chakra-ui/react';
+import { FaGithub, FaDiscord } from 'react-icons/fa';
+import { FcGoogle } from 'react-icons/fc';
+
+import { useAuth } from '../contexts/AuthContext';
+
+import {
+  SignUpFormData,
+  signUpFormSchema,
+} from '../validators/SignUpUserValidator';
 
 import {
   Input,
-  Container,
+  SignContainer,
   Divider,
-  GoogleButton,
+  SocialButton,
   TextLink,
 } from '../components';
-import { isEmpty } from '../utils';
-
-type SignUpFormData = {
-  name: string;
-  email: string;
-  password: string;
-};
-
-const signUpFormSchema = yup.object().shape({
-  name: yup.string().required('Name is required'),
-  email: yup.string().required('Email is required').email('Invalid email'),
-  password: yup.string().required('Password is required'),
-});
 
 export default function SignUp() {
-  const router = useRouter();
+  const { signUp } = useAuth();
 
   const {
     register,
@@ -37,15 +31,34 @@ export default function SignUp() {
   });
 
   const handleSignUp: SubmitHandler<SignUpFormData> = async (values) => {
-    if (isEmpty(errors)) {
-      router.push(`/dashboard/2`);
+    try {
+      await signUp(values);
+    } catch (error) {
+      console.log(error);
     }
   };
 
   return (
-    <Container image="game-signup">
+    <SignContainer image="game-signup">
       <Flex w="100%" maxW={360} flexDir="column" p="8">
-        <GoogleButton label="Sign Up" />
+        <SocialButton
+          icon={FcGoogle}
+          name="Google"
+          action="Sign Up"
+          provider="GOOGLE"
+        />
+        <SocialButton
+          icon={FaGithub}
+          name="Github"
+          action="Sign Up"
+          provider="GITHUB"
+        />
+        <SocialButton
+          icon={FaDiscord}
+          name="Discord"
+          action="Sign Up"
+          provider="DISCORD"
+        />
         <Divider />
         <Flex
           as="form"
@@ -76,6 +89,13 @@ export default function SignUp() {
               error={errors.password}
               {...register('password')}
             />
+            <Input
+              name="password_confirmation"
+              type="password"
+              placeholder="**********"
+              error={errors.password_confirmation}
+              {...register('password_confirmation')}
+            />
           </Stack>
           <Button
             type="submit"
@@ -89,6 +109,6 @@ export default function SignUp() {
         </Flex>
         <TextLink label="Already have an account?" href="/signin" />
       </Flex>
-    </Container>
+    </SignContainer>
   );
 }
