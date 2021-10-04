@@ -22,10 +22,10 @@ export function SidebarNav() {
       pb="4"
     >
       <Flex direction="column" grow={1} justify="center">
-        <NavLink icon={BiHomeAlt} href={`/dashboard/${user.id}`}>
+        <NavLink icon={BiHomeAlt} href={`/dashboard/${user?.id}`}>
           Dashboard
         </NavLink>
-        <NavLink icon={BiUser} href={`/dashboard/profile/${user.id}`}>
+        <NavLink icon={BiUser} href={`/dashboard/profile/${user?.id}`}>
           Profile
         </NavLink>
         <NavLink icon={HiOutlineChatAlt2} href="/dashboard/forum">
