@@ -38,7 +38,7 @@ export default function ResetPassword() {
           mb="10"
           textAlign="center"
         >
-          Your password reset will be sent to the registered email.
+          Your password reset will be shown if the registered email exists.
         </Text>
         <Flex
           as="form"

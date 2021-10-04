@@ -1,4 +1,4 @@
-import Mail from "@ioc:Adonis/Addons/Mail";
+// import Mail from "@ioc:Adonis/Addons/Mail";
 import { HttpContextContract } from "@ioc:Adonis/Core/HttpContext";
 import { ResponseContract } from "@ioc:Adonis/Core/Response";
 import { string } from "@ioc:Adonis/Core/Helpers";
@@ -200,34 +200,22 @@ export default class AuthController {
       const user = await User.findBy("email", email);
       if (!user) return response.notFound({ error: "User not found!" });
 
-      await user.merge({ password: string.generateRandom(8) }).save();
+      const newPassword = string.generateRandom(8);
 
-      await Mail.send((message) => {
-        message
-          .from("admin@venture.vercel.app")
-          .to("giiselebernardes@gmail.com")
-          .subject("Welcome Onboard!")
-          .htmlView("emails/welcome", {
-            user: { fullName: "Some Name" },
-            url: "https://your-app.com/verification-url",
-          });
-      });
+      await user.merge({ password: newPassword }).save();
 
       // await Mail.send((message) => {
       //   message
-      //     .from("no-reply@bio2game.com")
-      //     .to(userProvider.user!.email)
-      //     .subject("Changement de mot de passe sur Bio2Game.com")
-      //     .htmlView("emails/forget-password", {
-      //       token: Encryption.encrypt({
-      //         id: userProvider.user!.id,
-      //         token: userProvider.getRememberMeToken(),
-      //       }),
-      //       domain: process.env.WEB_URL || "https://www.bio2game.com",
+      //     .from("admin@venture.vercel.app")
+      //     .to("giiselebernardes@gmail.com")
+      //     .subject("Welcome Onboard!")
+      //     .htmlView("emails/welcome", {
+      //       user: { fullName: "Some Name" },
+      //       url: "https://your-app.com/verification-url",
       //     });
-      // }).catch(() => null);
+      // });
 
-      return response.ok({ user: user });
+      return response.ok({ newPassword: newPassword });
     } catch (error) {
       console.log(error);
       return response.notImplemented(error);

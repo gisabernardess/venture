@@ -25,6 +25,16 @@ export const useNotification = () => {
     },
   });
 
+  const password = async ({ message }: ToastProps) => {
+    MySwal.fire({
+      icon: 'info',
+      position: 'center',
+      title: 'Password Reset',
+      text: message ?? '',
+      confirmButtonText: 'Ok!',
+    });
+  };
+
   const success = async ({ title, message, to }: ToastProps) => {
     await Toast.fire({
       icon: 'success',
@@ -48,5 +58,6 @@ export const useNotification = () => {
   return {
     success,
     error,
+    password,
   };
 };

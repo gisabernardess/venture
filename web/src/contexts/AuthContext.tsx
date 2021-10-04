@@ -144,11 +144,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       await api
         .post('/reset', { ...credentials })
-        .then(({ data: { user } }) => {
-          setUser(user);
-          notification.success({
-            title: 'Email sent successfully!',
-            to: '/',
+        .then(({ data: { newPassword } }) => {
+          notification.password({
+            message: `Your new password: ${newPassword}`,
           });
         })
         .catch(({ response }) => notification.error(response.data.error));

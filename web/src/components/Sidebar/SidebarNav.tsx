@@ -31,9 +31,9 @@ export function SidebarNav() {
         <NavLink icon={HiOutlineChatAlt2} href="/dashboard/forum">
           Forum
         </NavLink>
-        {user?.role === UserRole.ADMIN && (
+        {user?.role !== UserRole.PLAYER && (
           <NavLink icon={BiGroup} href="/dashboard/users">
-            Permissions
+            Users
           </NavLink>
         )}
         <NavLink icon={FaBook} href="/dashboard/guides">
