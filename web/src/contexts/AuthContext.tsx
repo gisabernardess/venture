@@ -82,37 +82,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       switch (provider) {
         case 'GITHUB':
-          await api
-            .get('/github/callback', { params: { code } })
-            .then(({ data }) => {
-              if (data) {
-                setCookie(undefined, 'venture.token', data.access.token, {
-                  maxAge: data.access.expiresAt ?? 60 * 60 * 24, // 24 hours
-                });
-                setUser(data.user);
-                notification.success({
-                  title: 'Successfully logged in!',
-                  to: `/dashboard/${data.user.id}`,
-                });
-              }
-            })
-            .catch(({ response }) => console.log(response));
+          authenticateSocial('/github/callback', code);
           break;
         case 'DISCORD':
-          await api
-            .get('/discord/redirect')
-            .then(({ data: discord }) => {
-              console.log(discord);
-            })
-            .catch(({ response }) => console.log(response));
+          authenticateSocial('/discord/callback', code);
           break;
         case 'GOOGLE':
-          await api
-            .get('/google/redirect')
-            .then(({ data: google }) => {
-              console.log(google);
-            })
-            .catch(({ response }) => console.log(response));
+          authenticateSocial('/google/callback', code);
           break;
         default:
           break;
@@ -184,6 +160,32 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .catch(({ response }) => {
           notification.error(response.data.error);
         });
+    } catch (error) {
+      notification.error(error.message);
+    }
+  }
+
+  async function authenticateSocial(url: string, code: string) {
+    try {
+      await api
+        .get(url, { params: { code } })
+        .then(({ data: { user, access } }) => {
+          if (user) {
+            setCookie(undefined, 'venture.token', access.token, {
+              maxAge: access.expiresAt ?? 60 * 60 * 24, // 24 hours
+            });
+
+            setUser(user);
+
+            api.defaults.headers['Authorization'] = `Bearer ${access.token}`;
+
+            notification.success({
+              title: 'Successfully logged in!',
+              to: `/dashboard/${user.id}`,
+            });
+          }
+        })
+        .catch(({ response }) => console.log(response));
     } catch (error) {
       notification.error(error.message);
     }

@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { Flex } from '@chakra-ui/react';
+import { Flex, Spinner } from '@chakra-ui/react';
 
 import { SocialAuthParams, useAuth } from '../../contexts/AuthContext';
 
@@ -22,8 +22,9 @@ export default function Authorize({ provider }) {
   }, []);
 
   return (
-    <Flex direction="column" minH="100vh">
+    <Flex direction="column" minH="100vh" align="center" justify="center">
       Authorizing...
+      <Spinner />
     </Flex>
   );
 }
