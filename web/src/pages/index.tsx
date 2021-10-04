@@ -5,7 +5,6 @@ import {
   Box,
   Text,
   Stack,
-  HStack,
   Heading,
   Button,
   useBreakpointValue,

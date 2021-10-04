@@ -11,7 +11,7 @@ export default function Dashboard({ id }) {
 
   return (
     <PageContainer>
-      <Text>{`Welcome ${user?.name}`}</Text>
+      <Text>{`Welcome ${user?.name}, ID ${id}`}</Text>
     </PageContainer>
   );
 }

@@ -36,7 +36,7 @@ interface UpdateUserProps {
 export default function UpdateUser({ user }: UpdateUserProps) {
   const { user: currentUser } = useAuth();
   const notification = useNotification();
-  const isSameUser = currentUser.id === user.id;
+  const isSameUser = currentUser?.id === user?.id;
 
   const {
     register,
@@ -51,8 +51,8 @@ export default function UpdateUser({ user }: UpdateUserProps) {
   ) => {
     try {
       await api
-        .put(`/users/${user.id}`, {
-          id: user.id,
+        .put(`/users/${user?.id}`, {
+          id: user?.id,
           ...values,
         })
         .then(() => {

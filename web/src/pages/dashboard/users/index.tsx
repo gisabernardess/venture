@@ -108,7 +108,7 @@ export default function Users({ users, totalCount }: PermissionsProps) {
                 </Tr>
               </Thead>
               <Tbody>
-                {listOfUsers.map((user) => (
+                {listOfUsers?.map((user) => (
                   <Tr key={user.id}>
                     <Td>
                       <Box>

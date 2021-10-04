@@ -1,5 +1,4 @@
-import { getAPIClient, getAPISocial } from './axios';
-import { ProviderType } from '../contexts/AuthContext';
+import { getAPIClient } from './axios';
 
 // for all requests from the browser
 export const api = getAPIClient();
