@@ -1,8 +1,13 @@
 import NextLink from 'next/link';
-import { Button, Flex } from '@chakra-ui/react';
+import { Button, Flex, HStack, useBreakpointValue } from '@chakra-ui/react';
 import { Logo } from './Logo';
 
 export function Header() {
+  const isMobile = useBreakpointValue({
+    base: true,
+    md: false,
+  });
+
   return (
     <Flex
       as="header"
@@ -17,17 +22,21 @@ export function Header() {
     >
       <Flex w="100%" maxW={1200} h="100%" mx="auto" align="center">
         <Logo />
-        <Flex w="15%" ml="auto" justify="space-between">
-          <NextLink href="/signin" passHref>
-            <Button as="a" size="md" fontSize="sm" colorScheme="blue">
-              Sign In
-            </Button>
-          </NextLink>
-          <NextLink href="/signup" passHref>
-            <Button as="a" size="md" fontSize="sm" colorScheme="red">
-              Sign Up
-            </Button>
-          </NextLink>
+        <Flex ml="auto" justify="space-between">
+          <HStack>
+            <NextLink href="/signin" passHref>
+              <Button as="a" size="md" fontSize="sm" colorScheme="blue">
+                Sign In
+              </Button>
+            </NextLink>
+            {!isMobile && (
+              <NextLink href="/signup" passHref>
+                <Button as="a" size="md" fontSize="sm" colorScheme="red">
+                  Sign Up
+                </Button>
+              </NextLink>
+            )}
+          </HStack>
         </Flex>
       </Flex>
     </Flex>

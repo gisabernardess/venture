@@ -8,6 +8,7 @@ import {
   HStack,
   Heading,
   Button,
+  useBreakpointValue,
 } from '@chakra-ui/react';
 import { FaDiceD20, FaUserPlus, FaPlay } from 'react-icons/fa';
 import { MdVideogameAsset } from 'react-icons/md';
@@ -15,14 +16,24 @@ import { MdVideogameAsset } from 'react-icons/md';
 import { Card, Footer, Header, SEO } from '../components';
 
 export default function Home() {
+  const isMobile = useBreakpointValue({
+    base: true,
+    md: false,
+  });
+
   return (
     <>
       <SEO title="Home" image="cover.png" />
-      <Flex direction="column" minH="100vh">
+      <Flex direction="column" minH="100vh" border="1px solid yellow">
         <Header />
         <Flex as="main" direction="column" w="100%" maxW={1200} mx="auto">
-          <Flex w="100%" h="80vh" pos="relative">
-            <Box my="15%">
+          <Flex w="100%" h={{ base: 'auto', lg: '65vh' }} pos="relative">
+            <Box
+              w={['100%', '50%']}
+              my={['4', '15%']}
+              px={['0', '2rem']}
+              textAlign={['center', 'left']}
+            >
               <Stack spacing={2}>
                 <Heading as="h1">
                   Your{' '}
@@ -48,15 +59,17 @@ export default function Home() {
                 <Text as="b">Organize your games. Play them with anyone.</Text>
               </Stack>
             </Box>
-            <Box pos="absolute" right="0">
-              <Image src="images/avatar.png" alt="Venture" />
-            </Box>
+            {!isMobile && (
+              <Box w={{ md: '75%' }} pos="absolute" right="0">
+                <Image src="images/avatar.png" alt="Venture" />
+              </Box>
+            )}
           </Flex>
-          <Stack w="100%" align="center" justify="center" spacing={10} py={10}>
+          <Stack w="100%" align="center" justify="center" spacing={10} py={7}>
             <Heading as="h1">How To Get Started</Heading>
 
             <Flex>
-              <HStack>
+              <Stack direction={{ base: 'column', lg: 'row' }}>
                 <Card
                   icon={{ icon: FaDiceD20, color: 'red.500' }}
                   title="Sign Up"
@@ -77,7 +90,7 @@ export default function Home() {
                   title="Play"
                   description="Start gaming! Have fun!"
                 />
-              </HStack>
+              </Stack>
             </Flex>
 
             <NextLink href="/signup" passHref>

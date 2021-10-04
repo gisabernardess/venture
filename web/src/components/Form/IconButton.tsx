@@ -19,7 +19,13 @@ export function IconButton({
   icon,
 }: IconButtonProps) {
   return (
-    <Button as="a" variant={variant} href={href} target="_blank">
+    <Button
+      as="a"
+      variant={variant}
+      href={href}
+      target="_blank"
+      alignContent="center"
+    >
       <Icon
         as={icon.icon}
         fontSize={icon.fontSize ?? '25'}
