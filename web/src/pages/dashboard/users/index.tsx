@@ -41,9 +41,9 @@ export default function Users({ users, totalCount }: PermissionsProps) {
   const [listOfUsers, setListOfUsers] = useState<User[]>(users);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const isWideVersion = useBreakpointValue({
-    base: false,
-    lg: true,
+  const isMobile = useBreakpointValue({
+    base: true,
+    md: false,
   });
 
   async function refetchUsers() {
@@ -103,8 +103,8 @@ export default function Users({ users, totalCount }: PermissionsProps) {
               <Thead>
                 <Tr>
                   <Th>User</Th>
-                  <Th>Role</Th>
-                  {isWideVersion && <Th w="8"></Th>}
+                  {!isMobile && <Th>Role</Th>}
+                  <Th w="8"></Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -118,12 +118,14 @@ export default function Users({ users, totalCount }: PermissionsProps) {
                           </Text>
                           {user.name.substr(1, user.name.length)}
                         </Text>
-                        <Text fontSize="sm" color="gray.400">
-                          {user.email}
-                        </Text>
+                        {!isMobile && (
+                          <Text fontSize="sm" color="gray.400">
+                            {user.email}
+                          </Text>
+                        )}
                       </Box>
                     </Td>
-                    <Td>{user.role}</Td>
+                    {!isMobile && <Td>{user.role}</Td>}
                     <Td>
                       <HStack>
                         <NextLink href={`/dashboard/users/${user.id}`} passHref>
