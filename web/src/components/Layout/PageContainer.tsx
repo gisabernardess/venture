@@ -19,7 +19,7 @@ export function PageContainer({ children }: PageContainerProps) {
           maxW={960}
           mx="auto"
           px="6"
-          border="1px solid yellow"
+          // border="1px solid yellow"
         >
           {children}
         </Flex>
