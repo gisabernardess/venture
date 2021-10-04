@@ -10,7 +10,7 @@ import { endOfDay } from "date-fns";
 import User from "App/Models/User";
 import ApiToken from "App/Models/ApiToken";
 
-import CreateUserValidator from "App/Validators/CreateUserValidator";
+import RegisterUserValidator from "App/Validators/RegisterUserValidator";
 import ResetPasswordValidator from "App/Validators/ResetPasswordValidator";
 
 type OAuthProviderUser = {
@@ -60,7 +60,7 @@ export default class AuthController {
   public async register({ auth, request, response }: HttpContextContract) {
     try {
       const { name, email, password } = await request.validate(
-        CreateUserValidator
+        RegisterUserValidator
       );
 
       const user = await User.create({

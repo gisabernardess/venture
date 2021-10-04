@@ -17,6 +17,7 @@ import {
 import { api } from '../../../services/api';
 import { getAPIClient } from '../../../services/axios';
 
+import { useAuth } from '../../../contexts/AuthContext';
 import { useNotification } from '../../../hooks/useNotification';
 
 import { User } from '../../../models/types';
@@ -33,7 +34,9 @@ interface UpdateUserProps {
 }
 
 export default function UpdateUser({ user }: UpdateUserProps) {
+  const { user: currentUser } = useAuth();
   const notification = useNotification();
+  const isSameUser = currentUser.id === user.id;
 
   const {
     register,
@@ -91,6 +94,7 @@ export default function UpdateUser({ user }: UpdateUserProps) {
           <SimpleGrid minChildWidth="240px" spacing={['6', '8']} w="100%">
             <Input
               defaultValue={user?.name}
+              isDisabled={!isSameUser}
               name="name"
               type="text"
               placeholder="Name"
@@ -99,6 +103,7 @@ export default function UpdateUser({ user }: UpdateUserProps) {
             />
             <Input
               defaultValue={user?.email}
+              isDisabled={!isSameUser}
               name="email"
               type="email"
               placeholder="Email"
@@ -130,35 +135,39 @@ export default function UpdateUser({ user }: UpdateUserProps) {
             />
           </SimpleGrid>
 
-          <SimpleGrid w="100%">
-            <Heading size="md" fontWeight="normal">
-              Account Security
-            </Heading>
-          </SimpleGrid>
+          {isSameUser && (
+            <>
+              <SimpleGrid w="100%">
+                <Heading size="md" fontWeight="normal">
+                  Account Security
+                </Heading>
+              </SimpleGrid>
 
-          <SimpleGrid minChildWidth="240px" spacing={['6', '8']} w="100%">
-            <Input
-              name="oldPassword"
-              type="password"
-              placeholder="Current Password"
-              error={errors.oldPassword}
-              {...register('oldPassword')}
-            />
-            <Input
-              name="password"
-              type="password"
-              placeholder="Password"
-              error={errors.password}
-              {...register('password')}
-            />
-            <Input
-              name="password_confirmation"
-              type="password"
-              placeholder="Password Confirmation"
-              error={errors.password_confirmation}
-              {...register('password_confirmation')}
-            />
-          </SimpleGrid>
+              <SimpleGrid minChildWidth="240px" spacing={['6', '8']} w="100%">
+                <Input
+                  name="oldPassword"
+                  type="password"
+                  placeholder="Current Password"
+                  error={errors.oldPassword}
+                  {...register('oldPassword')}
+                />
+                <Input
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                  error={errors.password}
+                  {...register('password')}
+                />
+                <Input
+                  name="password_confirmation"
+                  type="password"
+                  placeholder="Password Confirmation"
+                  error={errors.password_confirmation}
+                  {...register('password_confirmation')}
+                />
+              </SimpleGrid>
+            </>
+          )}
         </VStack>
 
         <Flex mt="8" justify="flex-end">
