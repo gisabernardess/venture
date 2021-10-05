@@ -13,6 +13,8 @@ export function SidebarNav() {
   const { user, logout } = useAuth();
   const { isDrawer } = useSidebarDrawer();
 
+  const isNotPlayer = user?.role !== UserRole.PLAYER;
+
   return (
     <Stack
       h="100%"
@@ -31,7 +33,7 @@ export function SidebarNav() {
         <NavLink icon={HiOutlineChatAlt2} href="/dashboard/forum">
           Forum
         </NavLink>
-        {user?.role !== UserRole.PLAYER && (
+        {isNotPlayer && (
           <NavLink icon={BiGroup} href="/dashboard/users">
             Users
           </NavLink>
