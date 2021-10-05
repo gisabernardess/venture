@@ -74,7 +74,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   async function socialAuthRedirect(provider: ProviderType) {
     // TODO: create a config for the API URL
     window.location.assign(
-      `http://localhost:3333/${provider.toLowerCase()}/redirect`,
+      `https://venture-server.herokuapp.com/${provider.toLowerCase()}/redirect`,
     );
   }
 

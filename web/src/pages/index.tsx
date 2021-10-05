@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <>
       <SEO title="Home" image="cover.png" />
-      <Flex direction="column" minH="100vh" border="1px solid yellow">
+      <Flex direction="column" minH="100vh">
         <Header />
         <Flex as="main" direction="column" w="100%" maxW={1200} mx="auto">
           <Flex w="100%" h={{ base: 'auto', lg: '65vh' }} pos="relative">

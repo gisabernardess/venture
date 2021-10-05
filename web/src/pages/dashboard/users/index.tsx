@@ -25,9 +25,11 @@ import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 import { api } from '../../../services/api';
 import { getAPIClient } from '../../../services/axios';
 
+import { useAuth } from '../../../contexts/AuthContext';
 import { useNotification } from '../../../hooks/useNotification';
 
 import { User } from '../../../models/types';
+import { UserRole } from '../../../models/enums';
 
 import { Pagination, PageContainer } from '../../../components';
 
@@ -38,8 +40,11 @@ interface PermissionsProps {
 
 export default function Users({ users, totalCount }: PermissionsProps) {
   const notification = useNotification();
+  const { user: currentUser } = useAuth();
   const [listOfUsers, setListOfUsers] = useState<User[]>(users);
   const [currentPage, setCurrentPage] = useState(1);
+
+  const isAdmin = currentUser?.role === UserRole.ADMIN;
 
   const isMobile = useBreakpointValue({
     base: true,
@@ -129,7 +134,12 @@ export default function Users({ users, totalCount }: PermissionsProps) {
                     <Td>
                       <HStack>
                         <NextLink href={`/dashboard/users/${user.id}`} passHref>
-                          <Button size="sm" fontSize="sm" variant="ghost">
+                          <Button
+                            size="sm"
+                            fontSize="sm"
+                            variant="ghost"
+                            disabled={!isAdmin}
+                          >
                             <Icon
                               as={AiFillEdit}
                               fontSize="20"
@@ -141,6 +151,7 @@ export default function Users({ users, totalCount }: PermissionsProps) {
                           size="sm"
                           fontSize="sm"
                           variant="ghost"
+                          disabled={!isAdmin}
                           onClick={() => handleDelete(user.id)}
                         >
                           <Icon

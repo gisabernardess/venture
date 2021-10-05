@@ -2,7 +2,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Flex, Button, Stack } from '@chakra-ui/react';
 import { FaGithub, FaDiscord } from 'react-icons/fa';
-import { FcGoogle } from 'react-icons/fc';
+// import { FcGoogle } from 'react-icons/fc';
 
 import { useAuth } from '../contexts/AuthContext';
 
@@ -41,12 +41,12 @@ export default function SignUp() {
   return (
     <SignContainer image="game-signup">
       <Flex w="100%" maxW={360} flexDir="column" p="8">
-        <SocialButton
+        {/* <SocialButton
           icon={FcGoogle}
           name="Google"
           action="Sign Up"
           provider="GOOGLE"
-        />
+        /> */}
         <SocialButton
           icon={FaGithub}
           name="Github"
