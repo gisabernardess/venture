@@ -1,14 +1,18 @@
 import * as yup from 'yup';
 
 export const updateUserFormSchema = yup.object().shape({
-  name: yup.string().required('Name is required'),
-  email: yup.string().required('Email is required').email('Invalid email'),
-  role: yup.string().required('Role is required'),
+  name: yup.string(),
+  email: yup.string(),
+  role: yup.string(),
   oldPassword: yup.string(),
   password: yup
     .string()
     .when('oldPassword', (password, field) =>
-      password ? field.required('Enter your new password') : field,
+      password
+        ? field
+            .required('Enter your new password')
+            .min(8, 'Your new password must be at least 8 characters')
+        : field,
     ),
   password_confirmation: yup
     .string()
