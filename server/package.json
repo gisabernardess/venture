@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node ace serve --watch",
     "build": "node ace build --production",
-    "postinstall": "node ace swagger:generate && cp -a docs/ build/docs",
+    "postbuild": "node ace swagger:generate && cp -a docs/ build/docs",
     "start": "ENV_SILENT=true node server.js",
     "migration:rollback": "node ace migration:rollback --batch=0",
     "migration:run": "node ace migration:run && node ace db:seed"

@@ -9,46 +9,6 @@ import {
 } from "@ioc:Adonis/Lucid/Orm";
 import ApiToken from "./ApiToken";
 
-/**
- *  @swagger
- *  components:
- *   schemas:
- *    User:
- *      description: Representation of a user
- *      type: object
- *      properties:
- *        id:
- *          type: integer
- *          format: int64
- *        avatarUrl:
- *          type: string
- *        name:
- *          type: string
- *          example: Jane Doe
- *        email:
- *          type: string
- *          example: email@domain.com
- *        password:
- *          type: string
- *          format: password
- *        role:
- *          type: string
- *          enum:
- *          - PLAYER
- *          - MODERATOR
- *          - ADMIN
- *        createdAt:
- *          type: string
- *          format: date-time
- *        updatedAt:
- *          type: string
- *          format: date-time
- *      required:
- *        - id
- *        - email
- *        - password
- *        - role
- */
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number;

@@ -19,44 +19,6 @@ type OAuthProviderUser = {
 };
 
 export default class AuthController {
-  /**
-   * @swagger
-   * /register:
-   *   post:
-   *     tags:
-   *       - auth
-   *     summary: register a user
-   *     requestBody:
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - name
-   *               - email
-   *               - password
-   *               - password_confirmation
-   *             properties:
-   *               name:
-   *                 type: string
-   *                 example: Jane Doe
-   *               email:
-   *                 type: string
-   *                 example: email@domain.com
-   *               password:
-   *                 type: string
-   *                 format: password
-   *               password_confirmation:
-   *                 type: string
-   *                 format: password
-   *     responses:
-   *       201:
-   *         description: user created
-   *       400:
-   *         description: validation fails
-   *       501:
-   *         description: not implemented
-   */
   public async register({ auth, request, response }: HttpContextContract) {
     try {
       const { name, email, password } = await request.validate(
@@ -81,38 +43,6 @@ export default class AuthController {
     }
   }
 
-  /**
-   * @swagger
-   * /login:
-   *   post:
-   *     tags:
-   *       - auth
-   *     summary: authenticates a user
-   *     requestBody:
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - email
-   *               - password
-   *             properties:
-   *               email:
-   *                 type: string
-   *                 example: email@domain.com
-   *               password:
-   *                 type: string
-   *                 format: password
-   *     responses:
-   *       200:
-   *         description: login successful
-   *       400:
-   *         description: validation fails
-   *       404:
-   *         description: user not found
-   *       501:
-   *         description: not implemented
-   */
   public async login({ auth, request, response }: HttpContextContract) {
     try {
       const { email, password } = request.all();
@@ -149,50 +79,11 @@ export default class AuthController {
     }
   }
 
-  /**
-   * @swagger
-   * /logout:
-   *   post:
-   *     tags:
-   *       - auth
-   *     summary: revokes a user's token
-   *     responses:
-   *       200:
-   *         description: logout successful
-   */
   public async logout({ auth, response }: HttpContextContract) {
     await auth.use("api").revoke();
     return response.ok({ revoked: true });
   }
 
-  /**
-   * @swagger
-   * /reset:
-   *   post:
-   *     tags:
-   *       - auth
-   *     summary: user's reset password
-   *     requestBody:
-   *       content:
-   *         application/json:
-   *           schema:
-   *             type: object
-   *             required:
-   *               - email
-   *             properties:
-   *               email:
-   *                 type: string
-   *                 example: email@domain.com
-   *     responses:
-   *       200:
-   *         description: email sent
-   *       400:
-   *         description: validation fails
-   *       404:
-   *         description: user not found
-   *       500:
-   *         description: server error
-   */
   public async resetPassword({ request, response }: HttpContextContract) {
     try {
       const { email } = await request.validate(ResetPasswordValidator);
@@ -222,19 +113,6 @@ export default class AuthController {
     }
   }
 
-  /**
-   * @swagger
-   * /github/callback:
-   *   get:
-   *     tags:
-   *       - auth
-   *     summary: authenticates a user using the GitHub OAuth provider
-   *     responses:
-   *       200:
-   *         description: authentication successful
-   *       400:
-   *         description: authentication failed
-   */
   public async githubAuthentication({
     ally,
     auth,
@@ -243,19 +121,6 @@ export default class AuthController {
     await this.authenticateUser(ally.use("github"), auth, response);
   }
 
-  /**
-   * @swagger
-   * /discord/callback:
-   *   get:
-   *     tags:
-   *       - auth
-   *     summary: authenticates a user using the Discord OAuth provider
-   *     responses:
-   *       200:
-   *         description: authentication successful
-   *       400:
-   *         description: authentication failed
-   */
   public async discordAuthentication({
     ally,
     auth,
@@ -264,19 +129,6 @@ export default class AuthController {
     await this.authenticateUser(ally.use("discord"), auth, response);
   }
 
-  /**
-   * @swagger
-   * /google/callback:
-   *   get:
-   *     tags:
-   *       - auth
-   *     summary: authenticates a user using the Google OAuth provider
-   *     responses:
-   *       200:
-   *         description: authentication successful
-   *       400:
-   *         description: authentication failed
-   */
   public async googleAuthentication({
     ally,
     auth,

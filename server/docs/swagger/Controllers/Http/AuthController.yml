@@ -1,0 +1,200 @@
+/register:
+  post:
+    tags:
+      - auth
+    summary: register a user
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - name
+              - email
+              - password
+              - password_confirmation
+            properties:
+              name:
+                type: string
+                example: Jane Doe
+              email:
+                type: string
+                example: email@domain.com
+              password:
+                type: string
+                format: password
+              password_confirmation:
+                type: string
+                format: password
+    responses:
+      201:
+        description: user created
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: "#/components/schemas/User"
+                access:
+                  type: object
+                  properties:
+                    token:
+                      type: string
+                      format: byte
+                    expiresAt:
+                      type: string
+                      format: date-time
+      400:
+        description: validation fails
+      501:
+        description: not implemented
+
+/login:
+  post:
+    tags:
+      - auth
+    summary: authenticates a user
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+              - password
+            properties:
+              email:
+                type: string
+                example: email@domain.com
+              password:
+                type: string
+                format: password
+    responses:
+      200:
+        description: login successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: "#/components/schemas/User"
+                access:
+                  type: object
+                  properties:
+                    token:
+                      type: string
+                      format: byte
+                    expiresAt:
+                      type: string
+                      format: date-time
+      400:
+        description: validation fails
+      404:
+        description: user not found
+      501:
+        description: not implemented
+
+/logout:
+  post:
+    tags:
+      - auth
+    summary: revokes a user's token
+    responses:
+      200:
+        description: logout successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                revoked:
+                  type: boolean
+
+/reset:
+  post:
+    tags:
+      - auth
+    summary: user's reset password
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - email
+            properties:
+              email:
+                type: string
+                example: email@domain.com
+    responses:
+      200:
+        description: password updated
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                newPassword:
+                  type: string
+      400:
+        description: validation fails
+      404:
+        description: user not found
+      500:
+        description: server error
+
+/github/callback:
+  get:
+    tags:
+      - auth
+    summary: authenticates a user using the GitHub OAuth provider
+    responses:
+      200:
+        description: authentication successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: "#/components/schemas/User"
+                access:
+                  type: object
+                  properties:
+                    token:
+                      type: string
+                      format: byte
+                    expiresAt:
+                      type: string
+                      format: date-time
+      400:
+        description: authentication failed
+
+/discord/callback:
+  get:
+    tags:
+      - auth
+    summary: authenticates a user using the Discord OAuth provider
+    responses:
+      200:
+        description: authentication successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: "#/components/schemas/User"
+                access:
+                  type: object
+                  properties:
+                    token:
+                      type: string
+                      format: byte
+                    expiresAt:
+                      type: string
+                      format: date-time
+      400:
+        description: authentication failed
