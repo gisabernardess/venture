@@ -6,10 +6,12 @@ import {
   useEffect,
 } from 'react';
 import { setCookie, parseCookies, destroyCookie } from 'nookies';
+import { config } from '../config';
+
+import { api } from '../services/api';
 
 import { useNotification } from '../hooks/useNotification';
 
-import { api } from '../services/api';
 import { User } from '../models/types';
 
 export type ProviderType = 'GOOGLE' | 'GITHUB' | 'DISCORD';
@@ -72,9 +74,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }
 
   async function socialAuthRedirect(provider: ProviderType) {
-    // TODO: create a config for the API URL
     window.location.assign(
-      `https://venture-server.herokuapp.com/${provider.toLowerCase()}/redirect`,
+      `${config.baseUrl}/${provider.toLowerCase()}/redirect`,
     );
   }
 
@@ -91,6 +92,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
           authenticateSocial('/google/callback', code);
           break;
         default:
+          notification.error({
+            message: 'authentication provider is not supported',
+          });
           break;
       }
     } catch (error) {
@@ -120,9 +124,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       await api
         .post('/reset', { ...credentials })
-        .then(({ data: { newPassword } }) => {
+        .then(({ data: { password } }) => {
           notification.password({
-            message: `Your new password: ${newPassword}`,
+            message: `Your new password: ${password}`,
           });
         })
         .catch(({ response }) => notification.error(response.data.error));
@@ -145,7 +149,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         })
         .then(({ data: { user, access } }) => {
           setCookie(undefined, 'venture.token', access.token, {
-            maxAge: access.expiresAt ?? 60 * 60 * 24, // 24 hours
+            maxAge: access.expiresIn ?? 60 * 60 * 24, // 24 hours
           });
 
           setUser(user);
@@ -172,7 +176,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         .then(({ data: { user, access } }) => {
           if (user) {
             setCookie(undefined, 'venture.token', access.token, {
-              maxAge: access.expiresAt ?? 60 * 60 * 24, // 24 hours
+              maxAge: access.expiresIn ?? 60 * 60 * 24, // 24 hours
             });
 
             setUser(user);
