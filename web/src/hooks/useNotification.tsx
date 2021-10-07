@@ -35,19 +35,19 @@ export const useNotification = () => {
     });
   };
 
-  const success = async ({ title, message, to }: ToastProps) => {
+  const success = async (toast?: ToastProps) => {
     await Toast.fire({
       icon: 'success',
-      title: title,
-      text: message,
+      title: toast?.title,
+      text: toast?.message,
     }).then((result) => {
       if (result.dismiss === Swal.DismissReason.timer) {
-        to && router.push(to);
+        toast?.to && router.push(toast?.to);
       }
     });
   };
 
-  const error = async (toast: ToastProps) => {
+  const error = async (toast?: ToastProps) => {
     await Toast.fire({
       icon: 'error',
       title: 'Oops...Something went wrong!',

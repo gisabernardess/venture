@@ -5,8 +5,13 @@ import User from "App/Models/User";
 import CreateUserValidator from "App/Validators/CreateUserValidator";
 
 export default class UsersController {
-  public async index() {
-    return await User.all();
+  public async index({ request }: HttpContextContract) {
+    const { page } = request.all();
+    const limit = 10;
+
+    const users = await User.query().paginate(page, limit);
+
+    return users.toJSON();
   }
 
   public async show({ request }: HttpContextContract) {

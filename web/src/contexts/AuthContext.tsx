@@ -98,7 +98,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
           break;
       }
     } catch (error) {
-      console.log(error);
+      notification.error({
+        message: 'authentication provider is not supported',
+      });
     }
   }
 
@@ -114,9 +116,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
             to: '/',
           });
         })
-        .catch(({ response }) => notification.error(response.data.error));
+        .catch(({ response }) =>
+          notification.error({ message: response.data.error }),
+        );
     } catch (error) {
-      notification.error(error.message);
+      notification.error();
     }
   }
 
@@ -129,9 +133,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
             message: `Your new password: ${password}`,
           });
         })
-        .catch(({ response }) => notification.error(response.data.error));
+        .catch(({ response }) =>
+          notification.error({ message: response.data.error }),
+        );
     } catch (error) {
-      notification.error(error.message);
+      notification.error({ message: error.message });
     }
   }
 
@@ -162,10 +168,10 @@ export function AuthProvider({ children }: AuthProviderProps) {
           });
         })
         .catch(({ response }) => {
-          notification.error(response.data.error);
+          notification.error({ message: response.data.error });
         });
     } catch (error) {
-      notification.error(error.message);
+      notification.error({ message: error.message });
     }
   }
 
@@ -191,7 +197,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         })
         .catch(({ response }) => console.log(response));
     } catch (error) {
-      notification.error(error.message);
+      notification.error({ message: error.message });
     }
   }
 

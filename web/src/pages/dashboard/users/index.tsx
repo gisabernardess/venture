@@ -28,21 +28,23 @@ import { getAPIClient } from '../../../services/axios';
 import { useAuth } from '../../../contexts/AuthContext';
 import { useNotification } from '../../../hooks/useNotification';
 
-import { User } from '../../../models/types';
+import { Pagination as PaginationType, User } from '../../../models/types';
 import { UserRole } from '../../../models/enums';
 
 import { Pagination, PageContainer } from '../../../components';
 
 interface PermissionsProps {
   users: User[];
-  totalCount: number;
+  page: PaginationType;
 }
 
-export default function Users({ users, totalCount }: PermissionsProps) {
+export default function Users({ users, page }: PermissionsProps) {
   const notification = useNotification();
   const { user: currentUser } = useAuth();
   const [listOfUsers, setListOfUsers] = useState<User[]>(users);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(page?.current_page);
+
+  console.log(page);
 
   const isAdmin = currentUser?.role === UserRole.ADMIN;
 
@@ -52,7 +54,7 @@ export default function Users({ users, totalCount }: PermissionsProps) {
   });
 
   async function refetchUsers() {
-    const response = await api.get('/users');
+    const response = await api.get(`/users?page=${page?.current_page ?? 1}`);
     setListOfUsers(response.data);
   }
 
@@ -168,7 +170,7 @@ export default function Users({ users, totalCount }: PermissionsProps) {
             </Table>
 
             <Pagination
-              totalCountOfRegisters={totalCount}
+              totalCountOfRegisters={page?.total}
               currentPage={currentPage}
               onPageChange={setCurrentPage}
             />
@@ -193,9 +195,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const { data } = await apiClient.get('/users');
+  const { data: response } = await apiClient.get('/users?page=1');
 
   return {
-    props: { users: data, totalCount: data.length },
+    props: { users: response.data, page: response.meta },
   };
 };
