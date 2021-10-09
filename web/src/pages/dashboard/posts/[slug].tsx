@@ -17,13 +17,13 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { useNotification } from '../../../hooks/useNotification';
 
 import {
-  createPostFormSchema,
-  CreatePostFormData,
-} from '../../../validators/CreatePostValidator';
+  updatePostFormSchema,
+  UpdatePostFormData,
+} from '../../../validators/UpdatePostValidator';
 
 import { Input, Textarea, PageContainer } from '../../../components';
 
-export default function CreatePost() {
+export default function UpdatePost() {
   const { user: currentUser } = useAuth();
   const notification = useNotification();
 
@@ -32,10 +32,10 @@ export default function CreatePost() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    resolver: yupResolver(createPostFormSchema),
+    resolver: yupResolver(updatePostFormSchema),
   });
 
-  const handleCreatePost: SubmitHandler<CreatePostFormData> = async (
+  const handleUpdatePost: SubmitHandler<UpdatePostFormData> = async (
     values,
   ) => {
     try {
@@ -46,7 +46,7 @@ export default function CreatePost() {
         })
         .then(() => {
           notification.success({
-            title: 'Post created successfully',
+            title: 'Post updated successfully',
             to: '/dashboard/posts',
           });
         })
@@ -65,7 +65,7 @@ export default function CreatePost() {
         flex="1"
         borderRadius={8}
         p={['6', '8']}
-        onSubmit={handleSubmit(handleCreatePost)}
+        onSubmit={handleSubmit(handleUpdatePost)}
       >
         <Heading size="lg" fontWeight="normal">
           Create guide
@@ -80,6 +80,7 @@ export default function CreatePost() {
             placeholder="Slug"
             error={errors.slug}
             {...register('slug')}
+            isDisabled
           />
 
           <Input

@@ -3,3 +3,4 @@ export * from './Select';
 export * from './IconButton';
 export * from './SocialButton';
 export * from './BackButton';
+export * from './Textarea';
