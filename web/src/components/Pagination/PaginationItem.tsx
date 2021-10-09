@@ -34,9 +34,9 @@ export function PaginationItem({
       size="sm"
       fontSize="xs"
       w="4"
-      bg="gray.700"
+      bg="blue.700"
       _hover={{
-        bg: 'gray.500',
+        bg: 'blue.400',
       }}
       onClick={() => onPageChange(page)}
     >

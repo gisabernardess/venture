@@ -50,7 +50,7 @@ export default function CreateUser() {
           });
         })
         .catch(({ response }) => {
-          notification.error(response.data.error);
+          notification.error({ message: response.data.message });
         });
     } catch (error) {
       notification.error(error.message);

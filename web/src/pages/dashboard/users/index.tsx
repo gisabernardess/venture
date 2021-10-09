@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 import NextLink from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { parseCookies } from 'nookies';
 import {
   Flex,
@@ -17,7 +17,6 @@ import {
   Td,
   Text,
   useBreakpointValue,
-  Spinner,
 } from '@chakra-ui/react';
 import { FaUserPlus } from 'react-icons/fa';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
@@ -44,8 +43,6 @@ export default function Users({ users, page }: PermissionsProps) {
   const [listOfUsers, setListOfUsers] = useState<User[]>(users);
   const [currentPage, setCurrentPage] = useState(page?.current_page);
 
-  console.log(page);
-
   const isAdmin = currentUser?.role === UserRole.ADMIN;
 
   const isMobile = useBreakpointValue({
@@ -53,10 +50,16 @@ export default function Users({ users, page }: PermissionsProps) {
     md: false,
   });
 
-  async function refetchUsers() {
-    const response = await api.get(`/users?page=${page?.current_page ?? 1}`);
-    setListOfUsers(response.data);
-  }
+  const refetchUsers = () => {
+    api
+      .get(`/users?page=${currentPage ?? page?.current_page}`)
+      .then(({ data: response }) => setListOfUsers(response.data));
+  };
+
+  useEffect(() => {
+    refetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentPage]);
 
   async function handleDelete(userId: number) {
     try {
@@ -68,15 +71,13 @@ export default function Users({ users, page }: PermissionsProps) {
           });
           refetchUsers();
         })
-        .catch(({ response }) => notification.error(response.data.error));
+        .catch(({ response }) =>
+          notification.error({ message: response.data.message }),
+        );
     } catch (error) {
-      notification.error(error.message);
+      notification.error({ message: error.message });
     }
   }
-
-  const isLoading = false;
-  const isFetching = false;
-  const error = undefined;
 
   return (
     <PageContainer>
@@ -84,9 +85,6 @@ export default function Users({ users, page }: PermissionsProps) {
         <Flex mb="8" justify="space-between" align="center">
           <Heading size="lg" fontWeight="normal">
             Users
-            {!isLoading && isFetching && (
-              <Spinner size="sm" color="gray.500" ml="4" />
-            )}
           </Heading>
 
           <NextLink href="/dashboard/users/create" passHref>
@@ -96,86 +94,66 @@ export default function Users({ users, page }: PermissionsProps) {
           </NextLink>
         </Flex>
 
-        {isLoading ? (
-          <Flex justify="center">
-            <Spinner />
-          </Flex>
-        ) : error ? (
-          <Flex justify="center">
-            <Text>Unable to fetch the data.</Text>
-          </Flex>
-        ) : (
-          <>
-            <Table colorScheme="whiteAlpha">
-              <Thead>
-                <Tr>
-                  <Th>User</Th>
-                  {!isMobile && <Th>Role</Th>}
-                  <Th w="8"></Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {listOfUsers?.map((user) => (
-                  <Tr key={user.id}>
-                    <Td>
-                      <Box>
-                        <Text>
-                          <Text as="span" fontWeight="bold" color="red.500">
-                            {user.name.charAt(0)}
-                          </Text>
-                          {user.name.substr(1, user.name.length)}
-                        </Text>
-                        {!isMobile && (
-                          <Text fontSize="sm" color="gray.400">
-                            {user.email}
-                          </Text>
-                        )}
-                      </Box>
-                    </Td>
-                    {!isMobile && <Td>{user.role}</Td>}
-                    <Td>
-                      <HStack>
-                        <NextLink href={`/dashboard/users/${user.id}`} passHref>
-                          <Button
-                            size="sm"
-                            fontSize="sm"
-                            variant="ghost"
-                            disabled={!isAdmin}
-                          >
-                            <Icon
-                              as={AiFillEdit}
-                              fontSize="20"
-                              color="red.500"
-                            />
-                          </Button>
-                        </NextLink>
-                        <Button
-                          size="sm"
-                          fontSize="sm"
-                          variant="ghost"
-                          disabled={!isAdmin}
-                          onClick={() => handleDelete(user.id)}
-                        >
-                          <Icon
-                            as={AiFillDelete}
-                            fontSize="20"
-                            color="red.500"
-                          />
-                        </Button>
-                      </HStack>
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
+        <Table colorScheme="whiteAlpha">
+          <Thead>
+            <Tr>
+              <Th>User</Th>
+              {!isMobile && <Th>Role</Th>}
+              <Th w="8"></Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {listOfUsers?.map((user) => (
+              <Tr key={user.id}>
+                <Td>
+                  <Box>
+                    <Text>
+                      <Text as="span" fontWeight="bold" color="red.500">
+                        {user.name.charAt(0)}
+                      </Text>
+                      {user.name.substr(1, user.name.length)}
+                    </Text>
+                    {!isMobile && (
+                      <Text fontSize="sm" color="gray.400">
+                        {user.email}
+                      </Text>
+                    )}
+                  </Box>
+                </Td>
+                {!isMobile && <Td>{user.role}</Td>}
+                <Td>
+                  <HStack>
+                    <NextLink href={`/dashboard/users/${user.id}`} passHref>
+                      <Button
+                        size="sm"
+                        fontSize="sm"
+                        variant="ghost"
+                        disabled={!isAdmin}
+                      >
+                        <Icon as={AiFillEdit} fontSize="20" color="red.500" />
+                      </Button>
+                    </NextLink>
+                    <Button
+                      size="sm"
+                      fontSize="sm"
+                      variant="ghost"
+                      disabled={!isAdmin}
+                      onClick={() => handleDelete(user.id)}
+                    >
+                      <Icon as={AiFillDelete} fontSize="20" color="red.500" />
+                    </Button>
+                  </HStack>
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
 
-            <Pagination
-              totalCountOfRegisters={page?.total}
-              currentPage={currentPage}
-              onPageChange={setCurrentPage}
-            />
-          </>
-        )}
+        <Pagination
+          totalCountOfRegisters={page?.total}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
       </Box>
     </PageContainer>
   );

@@ -7,7 +7,7 @@ import CreateUserValidator from "App/Validators/CreateUserValidator";
 export default class UsersController {
   public async index({ request }: HttpContextContract) {
     const { page } = request.all();
-    const limit = 10;
+    const limit = 8;
 
     const users = await User.query().paginate(page, limit);
 
@@ -30,7 +30,7 @@ export default class UsersController {
         password: string.generateRandom(8),
       });
     } catch (error) {
-      response.notImplemented(error.message);
+      response.badRequest(error.messages.errors[0]);
     }
   }
 
@@ -40,18 +40,18 @@ export default class UsersController {
         request.all();
 
       const user = await User.find(id);
-      if (!user) return response.status(404).send({ error: "User not found" });
+      if (!user) return response.notFound({ message: "User not found" });
 
       if (email && email !== user.email) {
         const userExists = await User.find({ where: { email } });
         if (userExists)
-          return response.status(400).send({
-            error: "There is a user with this email. Try another one",
+          return response.badRequest({
+            message: "There is a user with this email. Try another one",
           });
       }
 
       if (oldPassword && !(await user.checkPassword(oldPassword))) {
-        return response.status(400).send({ error: "Invalid current password" });
+        return response.badRequest({ message: "Invalid current password" });
       }
 
       return await user
@@ -72,7 +72,7 @@ export default class UsersController {
     const { id } = request.params();
 
     const user = await User.findOrFail(id);
-    if (!user) return response.status(404).send({ error: "User not found" });
+    if (!user) return response.notFound({ message: "User not found" });
 
     return await user.delete();
   }
