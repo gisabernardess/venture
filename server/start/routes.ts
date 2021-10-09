@@ -64,6 +64,9 @@ Route.group(() => {
 Route.group(() => {
   Route.get("/users", "UsersController.index");
   Route.get("/users/:id", "UsersController.show");
+
+  Route.get("/posts", "PostsController.index");
+  Route.get("/posts/:slug", "PostsController.show");
 });
 
 /**
@@ -73,4 +76,8 @@ Route.group(() => {
   Route.post("/users", "UsersController.create");
   Route.put("/users/:id", "UsersController.update");
   Route.delete("/users/:id", "UsersController.destroy");
+
+  Route.post("/posts", "PostsController.create");
+  Route.put("/posts/:slug", "PostsController.update");
+  Route.delete("/posts/:slug", "PostsController.destroy");
 }).middleware("auth");

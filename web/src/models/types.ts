@@ -11,6 +11,15 @@ export type User = {
   updatedAt: string;
 };
 
+export type Post = {
+  slug: string;
+  title: string;
+  excerpt: string;
+  content: string;
+  createdBy: string;
+  updatedAt: string;
+};
+
 export type Pagination = {
   total: number;
   per_page: number;

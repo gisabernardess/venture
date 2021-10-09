@@ -38,7 +38,7 @@ export function SidebarNav() {
             Users
           </NavLink>
         )}
-        <NavLink icon={FaBook} href="/dashboard/guides">
+        <NavLink icon={FaBook} href="/dashboard/posts">
           Guides
         </NavLink>
       </Flex>
