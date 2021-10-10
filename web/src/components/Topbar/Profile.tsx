@@ -1,5 +1,6 @@
 import { useAuth } from '../../contexts/AuthContext';
-import { Flex, Text, Box, Avatar } from '@chakra-ui/react';
+import { Flex, Text, Box } from '@chakra-ui/react';
+import { Avatar } from '../Avatar';
 
 interface ProfileProps {
   showProfileData: boolean;
@@ -19,7 +20,7 @@ export function Profile({ showProfileData = true }: ProfileProps) {
         </Box>
       )}
 
-      <Avatar size="md" name={user?.name} src={user?.avatarUrl} />
+      <Avatar user={{ name: user?.name, avatarUrl: user?.avatarUrl }} />
     </Flex>
   );
 }

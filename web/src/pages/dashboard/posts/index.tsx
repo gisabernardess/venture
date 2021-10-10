@@ -24,7 +24,7 @@ import {
   AiOutlineClockCircle,
   AiOutlineUser,
 } from 'react-icons/ai';
-import { format } from 'date-fns';
+import { toFormatDate } from '../../../utils';
 
 import { api } from '../../../services/api';
 import { getAPIClient } from '../../../services/axios';
@@ -36,18 +36,6 @@ import { Pagination as PaginationType, Post } from '../../../models/types';
 import { UserRole } from '../../../models/enums';
 
 import { Pagination, PageContainer } from '../../../components';
-
-const formatPostResponse = (posts: any) =>
-  posts.map((post) => {
-    return {
-      slug: post.slug,
-      title: post.title,
-      excerpt: post.excerpt,
-      content: post.content,
-      createdBy: post.user.name,
-      updatedAt: format(new Date(post.updated_at), 'PPP'),
-    };
-  });
 
 interface PostsProps {
   posts: Post[];
@@ -71,8 +59,7 @@ export default function Posts({ posts, page }: PostsProps) {
     api
       .get(`/posts?page=${currentPage ?? page?.current_page}`)
       .then(({ data: response }) => {
-        const posts = formatPostResponse(response.data);
-        setListOfPosts(posts);
+        setListOfPosts(response.data);
       });
   };
 
@@ -121,7 +108,10 @@ export default function Posts({ posts, page }: PostsProps) {
               <Tr key={post.slug}>
                 <Td>
                   <Box>
-                    <NextLink href={`/dashboard/posts/${post.slug}`} passHref>
+                    <NextLink
+                      href={`/dashboard/posts/view/${post.slug}`}
+                      passHref
+                    >
                       <Link>
                         <Text>
                           <Text as="span" fontWeight="bold" color="red.500">
@@ -133,9 +123,9 @@ export default function Posts({ posts, page }: PostsProps) {
                     </NextLink>
                     <Text fontSize="xs" display="flex" alignItems="center">
                       <Icon as={AiOutlineClockCircle} mr="1" />
-                      {post.updatedAt}
+                      {toFormatDate(post.updatedAt)}
                       <Icon as={AiOutlineUser} ml="2" mr="1" />
-                      {post.createdBy}
+                      {post.user.name}
                     </Text>
                     <Text fontSize="sm" color="gray.400">
                       {post.excerpt}
@@ -198,9 +188,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   const { data: response } = await apiClient.get('/posts?page=1');
 
-  const posts = formatPostResponse(response.data);
-
   return {
-    props: { posts: posts, page: response.meta },
+    props: { posts: response.data, page: response.meta },
   };
 };

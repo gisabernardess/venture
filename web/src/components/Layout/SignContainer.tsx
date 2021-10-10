@@ -28,7 +28,7 @@ export function SignContainer({ image, children }: SignContainerProps) {
             <Logo dark />
           </Box>
           {children}
-          <BackButton />
+          <BackButton mt="10" />
         </Flex>
       </Flex>
     </Flex>

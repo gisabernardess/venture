@@ -30,7 +30,7 @@ export function Sidebar() {
   }
 
   return (
-    <Box as="aside" w="24" bg="blue.800">
+    <Box as="aside" w="24" maxH="100%" bg="blue.800">
       <SidebarNav />
     </Box>
   );

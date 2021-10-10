@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import { GetServerSideProps } from 'next';
+import { parseCookies } from 'nookies';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import {
@@ -12,10 +14,12 @@ import {
 } from '@chakra-ui/react';
 
 import { api } from '../../../services/api';
+import { getAPIClient } from '../../../services/axios';
 
 import { useAuth } from '../../../contexts/AuthContext';
 import { useNotification } from '../../../hooks/useNotification';
 
+import { Post } from '../../../models/types';
 import {
   updatePostFormSchema,
   UpdatePostFormData,
@@ -23,7 +27,11 @@ import {
 
 import { Input, Textarea, PageContainer } from '../../../components';
 
-export default function UpdatePost() {
+interface UpdatePostProps {
+  post: Post;
+}
+
+export default function UpdatePost({ post }: UpdatePostProps) {
   const { user: currentUser } = useAuth();
   const notification = useNotification();
 
@@ -40,9 +48,10 @@ export default function UpdatePost() {
   ) => {
     try {
       await api
-        .post('/posts', {
-          userId: currentUser.id,
+        .put(`/posts/${post.slug}`, {
           ...values,
+          userId: currentUser.id,
+          slug: post.slug,
         })
         .then(() => {
           notification.success({
@@ -68,13 +77,14 @@ export default function UpdatePost() {
         onSubmit={handleSubmit(handleUpdatePost)}
       >
         <Heading size="lg" fontWeight="normal">
-          Create guide
+          Update guide
         </Heading>
 
         <Divider my="6" borderColor="gray.700" />
 
         <VStack spacing="8">
           <Input
+            defaultValue={post?.slug}
             name="slug"
             type="text"
             placeholder="Slug"
@@ -84,6 +94,7 @@ export default function UpdatePost() {
           />
 
           <Input
+            defaultValue={post?.title}
             name="title"
             type="title"
             placeholder="Title"
@@ -92,6 +103,7 @@ export default function UpdatePost() {
           />
 
           <Input
+            defaultValue={post?.excerpt}
             name="excerpt"
             type="excerpt"
             placeholder="Briefing"
@@ -101,6 +113,7 @@ export default function UpdatePost() {
 
           {/* TODO: RichText Editor */}
           <Textarea
+            defaultValue={post?.content}
             name="content"
             placeholder="Content"
             error={errors.content}
@@ -125,3 +138,25 @@ export default function UpdatePost() {
     </PageContainer>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const apiClient = getAPIClient(ctx);
+
+  const { ['venture.token']: token } = parseCookies(ctx);
+
+  if (!token) {
+    return {
+      redirect: {
+        destination: '/signin',
+        permanent: false,
+      },
+    };
+  }
+
+  const { params } = ctx;
+  const { data } = await apiClient.get(`/posts/${params.slug}`);
+
+  return {
+    props: { post: data },
+  };
+};

@@ -9,3 +9,4 @@ export * from './Divider';
 export * from './TextLink';
 export * from './SEO';
 export * from './Pagination';
+export * from './Avatar';

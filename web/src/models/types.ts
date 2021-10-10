@@ -16,8 +16,15 @@ export type Post = {
   title: string;
   excerpt: string;
   content: string;
-  createdBy: string;
   updatedAt: string;
+  user: Pick<User, 'name'>;
+  comments: Comment[];
+};
+
+export type Comment = {
+  id: number;
+  text: string;
+  author: Pick<User, 'id' | 'name' | 'avatarUrl'>;
 };
 
 export type Pagination = {

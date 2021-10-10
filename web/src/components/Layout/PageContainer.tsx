@@ -8,10 +8,10 @@ interface PageContainerProps {
 
 export function PageContainer({ children }: PageContainerProps) {
   return (
-    <Flex direction="column" h="100vh">
+    <Flex direction="column" minH="100vh">
       <Topbar />
 
-      <Flex w="100%" h="100vh" mx="auto">
+      <Flex w="100%" h="91.5vh" mx="auto">
         <Sidebar />
         <Flex
           w="100%"

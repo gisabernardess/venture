@@ -13,7 +13,7 @@ export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number;
 
-  @column()
+  @column({ serializeAs: "avatarUrl" })
   public avatarUrl: string | null;
 
   @column()
@@ -30,10 +30,14 @@ export default class User extends BaseModel {
   @column()
   public role: string;
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: "createdAt" })
   public createdAt: DateTime;
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({
+    autoCreate: true,
+    autoUpdate: true,
+    serializeAs: "updatedAt",
+  })
   public updatedAt: DateTime;
 
   @hasMany(() => ApiToken, {

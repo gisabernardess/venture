@@ -10,17 +10,26 @@ export default class PostsController {
 
     const posts = await Post.query().preload("user").paginate(page, limit);
 
-    return posts.toJSON();
+    return posts.serialize();
   }
 
   public async show({ request }: HttpContextContract) {
     const { slug } = request.params();
-    return await Post.findByOrFail("slug", slug);
+
+    const post = await Post.query()
+      .preload("user")
+      .preload("comments", (commentsQuery) => {
+        commentsQuery.preload("user");
+      })
+      .where("slug", slug)
+      .firstOrFail();
+
+    return post.serialize();
   }
 
   public async create({ request, response }: HttpContextContract) {
     try {
-      const { userId, slug, title, excerpt } = await request.validate(
+      const { userId, slug, title, excerpt, content } = await request.validate(
         CreatePostValidator
       );
 
@@ -29,6 +38,7 @@ export default class PostsController {
         slug,
         title,
         excerpt,
+        content,
       });
     } catch (error) {
       response.badRequest(error.messages.errors[0]);
@@ -37,9 +47,9 @@ export default class PostsController {
 
   public async update({ request, response }: HttpContextContract) {
     try {
-      const { slug, title, excerpt } = request.all();
+      const { slug, title, excerpt, content } = request.all();
 
-      const post = await Post.findByOrFail("slug", slug);
+      const post = await Post.findBy("slug", slug);
       if (!post) return response.notFound({ message: "Post not found" });
 
       if (slug && slug !== post.slug) {
@@ -55,6 +65,7 @@ export default class PostsController {
           slug,
           title,
           excerpt,
+          content,
         })
         .save();
     } catch (error) {

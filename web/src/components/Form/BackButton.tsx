@@ -4,20 +4,25 @@ import { AiOutlineArrowLeft } from 'react-icons/ai';
 
 interface BackButtonProps {
   href?: string;
+  color?: string;
+  mt?: string;
+  hover?: {
+    color: string;
+  };
 }
 
-export function BackButton({ href }: BackButtonProps) {
+export function BackButton({ href, color, hover, ...rest }: BackButtonProps) {
   const router = useRouter();
 
   return (
     <Button
       leftIcon={<Icon as={AiOutlineArrowLeft} fontSize="20px" />}
       variant="unstyled"
-      color="gray.500"
+      color={color ?? 'gray.500'}
       display="flex"
-      mt="10"
-      _hover={{ color: 'gray.600' }}
+      _hover={hover ?? { color: 'gray.600' }}
       onClick={() => (href ? router.push(href) : router.back())}
+      {...rest}
     >
       back
     </Button>

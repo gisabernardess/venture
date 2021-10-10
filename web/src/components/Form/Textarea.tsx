@@ -16,12 +16,13 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 interface TextareaProps extends ChakraTextareaProps {
   name: string;
   error?: FieldError;
+  height?: string;
 }
 
 const TextareaBase: ForwardRefRenderFunction<
   HTMLTextAreaElement,
   TextareaProps
-> = ({ name, error = null, ...rest }, ref) => {
+> = ({ name, error = null, height, ...rest }, ref) => {
   return (
     <FormControl isInvalid={!!error}>
       <ChakraTextarea
@@ -32,7 +33,7 @@ const TextareaBase: ForwardRefRenderFunction<
         color="blue.900"
         focusBorderColor="blue.400"
         bg="white"
-        height="340px"
+        height={height ?? '340px'}
         resize="none"
         ref={ref}
         {...rest}
