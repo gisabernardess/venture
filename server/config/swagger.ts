@@ -13,9 +13,15 @@ export default {
       openapi: "3.0.0",
       info: {
         title: "venture // swagger docs",
-        version: "1.0.0",
+        version: "2.0.0",
         description: "OpenAPI Specification to Venture RESTful API",
       },
+      servers: [
+        {
+          url: "https://virtserver.swaggerhub.com/gisabernardess/venture/1.0.0",
+          description: "SwaggerHub API Auto Mocking",
+        },
+      ],
       tags: [
         {
           name: "auth",
@@ -23,7 +29,22 @@ export default {
         {
           name: "user",
         },
+        {
+          name: "post",
+        },
+        {
+          name: "comment",
+        },
       ],
+      components: {
+        securitySchemes: {
+          authorization: {
+            type: "http",
+            scheme: "bearer",
+            bearerFormat: "JWT",
+          },
+        },
+      },
     },
 
     apis: ["app/**/*.ts", "docs/swagger/**/*.yml", "start/routes.ts"],

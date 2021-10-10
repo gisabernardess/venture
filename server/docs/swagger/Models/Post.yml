@@ -1,7 +1,7 @@
 components:
   schemas:
-    ApiToken:
-      description: Representation of the Opaque Access Token to authenticate the user requests
+    Post:
+      description: Representation of a post
       type: object
       properties:
         id:
@@ -10,23 +10,25 @@ components:
         userId:
           type: integer
           format: int64
-        name:
+        slug:
           type: string
-        type:
+        title:
           type: string
-        token:
+        excerpt:
           type: string
-          format: byte
-        expiresAt:
+        content:
+          type: string
+        createdAt:
           type: string
           format: date-time
-        createdAt:
+        updatedAt:
           type: string
           format: date-time
       required:
         - id
         - userId
-        - name
-        - type
-        - token
+        - slug
+        - title
+        - content
         - createdAt
+        - updatedAt

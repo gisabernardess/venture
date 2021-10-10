@@ -42,7 +42,7 @@
                     token:
                       type: string
                       format: byte
-                    expiresAt:
+                    expiresIn:
                       type: string
                       format: date-time
       400:
@@ -86,7 +86,7 @@
                     token:
                       type: string
                       format: byte
-                    expiresAt:
+                    expiresIn:
                       type: string
                       format: date-time
       400:
@@ -98,6 +98,8 @@
 
 /logout:
   post:
+    security:
+      - authorization: []
     tags:
       - auth
     summary: revokes a user's token
@@ -116,7 +118,7 @@
   post:
     tags:
       - auth
-    summary: user's reset password
+    summary: reset a user's password
     requestBody:
       content:
         application/json:
@@ -136,7 +138,7 @@
             schema:
               type: object
               properties:
-                newPassword:
+                password:
                   type: string
       400:
         description: validation fails
@@ -166,7 +168,7 @@
                     token:
                       type: string
                       format: byte
-                    expiresAt:
+                    expiresIn:
                       type: string
                       format: date-time
       400:
@@ -193,7 +195,34 @@
                     token:
                       type: string
                       format: byte
-                    expiresAt:
+                    expiresIn:
+                      type: string
+                      format: date-time
+      400:
+        description: authentication failed
+
+/google/callback:
+  get:
+    tags:
+      - auth
+    summary: authenticates a user using the Google OAuth provider
+    responses:
+      200:
+        description: authentication successful
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: "#/components/schemas/User"
+                access:
+                  type: object
+                  properties:
+                    token:
+                      type: string
+                      format: byte
+                    expiresIn:
                       type: string
                       format: date-time
       400:

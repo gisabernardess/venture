@@ -11,10 +11,8 @@ components:
           type: string
         name:
           type: string
-          example: Jane Doe
         email:
           type: string
-          example: email@domain.com
         password:
           type: string
           format: password
@@ -32,6 +30,9 @@ components:
           format: date-time
       required:
         - id
+        - name
         - email
         - password
         - role
+        - createdAt
+        - updatedAt

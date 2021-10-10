@@ -1,0 +1,58 @@
+/comments:
+  post:
+    security:
+      - authorization: []
+    tags:
+      - comment
+    summary: creates a comment
+    description: this can only be done by the logged user
+    requestBody:
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - postId
+              - userId
+              - text
+            properties:
+              postId:
+                type: integer
+                format: int64
+              userId:
+                type: integer
+                format: int64
+              text:
+                type: string
+    responses:
+      201:
+        description: comment created
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Comment"
+      400:
+        description: validation fails
+      501:
+        description: not implemented
+/comments/{id}:
+  delete:
+    security:
+      - authorization: []
+    tags:
+      - comment
+    summary: deletes an existing comment
+    description: this can only be done by the logged user
+    parameters:
+      - name: id
+        in: path
+        description: comment's ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: comment deleted
+      404:
+        description: comment not found

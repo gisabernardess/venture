@@ -1,10 +1,10 @@
-/users:
+/posts:
   post:
     security:
       - authorization: []
     tags:
-      - user
-    summary: creates a user
+      - post
+    summary: creates a post
     description: this can only be done by the logged user
     requestBody:
       content:
@@ -12,29 +12,29 @@
           schema:
             type: object
             required:
-              - name
-              - email
-              - role
+              - userId
+              - slug
+              - title
+              - content
             properties:
-              name:
+              userId:
+                type: integer
+                format: int64
+              slug:
                 type: string
-                example: Jane Doe
-              email:
+              title:
                 type: string
-                example: email@domain.com
-              role:
+              excerpt:
                 type: string
-                enum:
-                  - PLAYER
-                  - MODERATOR
-                  - ADMIN
+              content:
+                type: string
     responses:
       201:
-        description: user created
+        description: post created
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: "#/components/schemas/Post"
       400:
         description: validation fails
       501:
@@ -43,21 +43,21 @@
     security:
       - authorization: []
     tags:
-      - user
-    summary: list all users
+      - post
+    summary: list all posts
     description: this can only be done by the logged user
     responses:
       200:
-        description: users listed
+        description: posts listed
         content:
           application/json:
             schema:
               type: object
               properties:
-                users:
+                posts:
                   type: array
                   items:
-                    $ref: "#/components/schemas/User"
+                    $ref: "#/components/schemas/Post"
                 meta:
                   type: object
                   properties:
@@ -79,101 +79,85 @@
                       type: string
                     previous_page_url:
                       type: string
-
-/users/{id}:
+/posts/{slug}:
   get:
     security:
       - authorization: []
     tags:
-      - user
-    summary: finds a user by id
+      - post
+    summary: finds a post by slug
     description: this can only be done by the logged user
     parameters:
-      - name: id
+      - name: slug
         in: path
-        description: user's ID
+        description: post's slug
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
     responses:
       200:
-        description: user exists
+        description: post exists
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: "#/components/schemas/Post"
       404:
-        description: user not found
+        description: post not found
   put:
     security:
       - authorization: []
     tags:
-      - user
-    summary: updates an existing user
+      - post
+    summary: updates an existing post
     description: this can only be done by the logged user
     parameters:
-      - name: id
+      - name: slug
         in: path
-        description: user's ID
+        description: post's slug
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
     requestBody:
       content:
         application/json:
           schema:
             type: object
             properties:
-              avatarUrl:
+              slug:
                 type: string
-              name:
+              title:
                 type: string
-                example: Jane Doe
-              email:
+              excerpt:
                 type: string
-                example: email@domain.com
-              oldPassword:
+              content:
                 type: string
-                format: password
-              password:
-                type: string
-                format: password
-              role:
-                type: string
-                enum:
-                  - PLAYER
-                  - MODERATOR
-                  - ADMIN
     responses:
       200:
-        description: user updated
+        description: post updated
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/User"
+              $ref: "#/components/schemas/Post"
       400:
         description: validation fails
       404:
-        description: user not found
+        description: post not found
   delete:
     security:
       - authorization: []
     tags:
-      - user
-    summary: deletes an existing user
+      - post
+    summary: deletes an existing post
     description: this can only be done by the logged user
     parameters:
-      - name: id
+      - name: slug
         in: path
-        description: user's ID
+        description: post's slug
         required: true
         schema:
-          type: integer
-          format: int64
+          type: string
     responses:
       200:
-        description: user deleted
+        description: post deleted
       404:
-        description: user not found
+        description: post not found
