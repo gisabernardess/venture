@@ -1,4 +1,5 @@
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import {
   Box,
   Button,
@@ -13,29 +14,82 @@ import {
 } from '@chakra-ui/react';
 import { AiFillDelete } from 'react-icons/ai';
 
+import { api } from '../../services/api';
+
 import { useAuth } from '../../contexts/AuthContext';
+import { useNotification } from '../../hooks/useNotification';
 
 import { Comment } from '../../models/types';
+import {
+  CreateCommentFormData,
+  createCommentFormSchema,
+} from '../../validators/CreateCommentValidator';
 
 import { Textarea, Avatar } from '../../components';
 
 interface CommentsProps {
+  postId: number;
   comments: Comment[];
+  refetch: () => void;
 }
 
-export function Comments({ comments }: CommentsProps) {
+export function Comments({ postId, comments, refetch }: CommentsProps) {
+  const notification = useNotification();
   const { user: currentUser } = useAuth();
   const hasComments = comments?.length > 0;
 
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm({
+    resolver: yupResolver(createCommentFormSchema),
+  });
 
-  const handleCreate = async () => {};
+  const handleCreate: SubmitHandler<CreateCommentFormData> = async (
+    values,
+    e,
+  ) => {
+    try {
+      await api
+        .post('/comments', {
+          postId: postId,
+          userId: currentUser.id,
+          ...values,
+        })
+        .then(() => {
+          refetch();
+          e.target.reset();
+          notification.success({
+            title: 'Comment created successfully',
+          });
+        })
+        .catch(({ response }) => {
+          notification.error({ message: response.data.message });
+        });
+    } catch (error) {
+      notification.error(error.message);
+    }
+  };
 
-  const handleDelete = async (commentId: number) => {};
+  const handleDelete = async (commentId: number) => {
+    try {
+      await api
+        .delete(`/comments/${commentId}`)
+        .then(() => {
+          refetch();
+          notification.success({
+            title: 'Comment successfully deleted!',
+          });
+        })
+        .catch(({ response }) =>
+          notification.error({ message: response.data.message }),
+        );
+    } catch (error) {
+      notification.error({ message: error.message });
+    }
+  };
 
   return (
     <>
@@ -53,11 +107,11 @@ export function Comments({ comments }: CommentsProps) {
         >
           {/* TODO: RichText Editor */}
           <Textarea
-            name="comment"
+            name="text"
             placeholder="Your comment..."
             height="5rem"
-            error={errors.comment}
-            {...register('comment')}
+            error={errors.text}
+            {...register('text')}
           />
 
           <Flex mt="8" justify="flex-end">

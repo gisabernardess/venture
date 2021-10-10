@@ -9,5 +9,5 @@ export function refreshPage() {
 }
 
 export function toFormatDate(date: string) {
-  return format(new Date(date), 'PPP');
+  return date && format(new Date(date), 'PPP');
 }

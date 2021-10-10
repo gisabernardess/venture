@@ -1,9 +1,8 @@
 import { GetServerSideProps } from 'next';
-
+import { useState } from 'react';
 import { parseCookies } from 'nookies';
 import {
   Box,
-  Button,
   Container,
   Heading,
   Text,
@@ -13,19 +12,26 @@ import {
 } from '@chakra-ui/react';
 import { AiOutlineClockCircle, AiOutlineUser } from 'react-icons/ai';
 
+import { api } from '../../../../services/api';
 import { getAPIClient } from '../../../../services/axios';
 
 import { Post } from '../../../../models/types';
 
-import { BackButton, PageContainer, Textarea } from '../../../../components';
+import { BackButton, PageContainer } from '../../../../components';
 import { toFormatDate } from '../../../../utils';
 import { Comments } from '../../../../components/Comments';
 
 interface ViewPostProps {
-  post: Omit<Post, 'slug' | 'excerpt'>;
+  post: Post;
 }
 
-export default function ViewPost({ post }: ViewPostProps) {
+export default function ViewPost({ post: received }: ViewPostProps) {
+  const [post, setPost] = useState<Post>(received);
+
+  const refetchPost = () => {
+    api.get(`/posts/${post.slug}`).then(({ data }) => setPost(data));
+  };
+
   return (
     <PageContainer>
       <Box flex="1" py="8">
@@ -52,7 +58,11 @@ export default function ViewPost({ post }: ViewPostProps) {
 
         <Divider my="6" borderColor="gray.700" />
 
-        <Comments comments={post.comments} />
+        <Comments
+          postId={post.id}
+          comments={post.comments}
+          refetch={refetchPost}
+        />
       </Box>
     </PageContainer>
   );
