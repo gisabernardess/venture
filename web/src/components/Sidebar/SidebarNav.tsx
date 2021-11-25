@@ -1,7 +1,7 @@
 import { useAuth } from '../../contexts/AuthContext';
 import { Flex, Stack } from '@chakra-ui/react';
-import { FaBook } from 'react-icons/fa';
-import { AiOutlineQuestionCircle } from 'react-icons/ai';
+import { FiBook } from 'react-icons/fi';
+import { AiOutlineQuestionCircle, AiOutlineLineChart } from 'react-icons/ai';
 import { BiHomeAlt, BiUser, BiGroup, BiLogOut } from 'react-icons/bi';
 import { HiOutlineChatAlt2 } from 'react-icons/hi';
 
@@ -33,19 +33,24 @@ export function SidebarNav() {
         <NavLink icon={HiOutlineChatAlt2} href="/dashboard/forum">
           Forum
         </NavLink>
-        {isNotPlayer && (
-          <NavLink icon={BiGroup} href="/dashboard/users">
-            Users
-          </NavLink>
-        )}
-        <NavLink icon={FaBook} href="/dashboard/posts">
+        <NavLink icon={FiBook} href="/dashboard/posts">
           Guides
         </NavLink>
+        {isNotPlayer && (
+          <>
+            <NavLink icon={BiGroup} href="/dashboard/users">
+              Users
+            </NavLink>
+            <NavLink icon={AiOutlineLineChart} href="/dashboard/statistics">
+              Statistics
+            </NavLink>
+          </>
+        )}
       </Flex>
       <NavLink icon={BiLogOut} href="/" onClick={() => logout()}>
         Log out
       </NavLink>
-      <NavLink icon={AiOutlineQuestionCircle} href="/faq">
+      <NavLink icon={AiOutlineQuestionCircle} href="/dashboard/faq">
         FAQ
       </NavLink>
     </Stack>
