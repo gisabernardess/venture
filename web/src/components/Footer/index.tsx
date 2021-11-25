@@ -37,11 +37,13 @@ export function Footer() {
             variant="link"
             icon={{ icon: FaGithub }}
             href={config.projectUrl}
+            label="Github profile"
           />
           <IconButton
             variant="link"
             icon={{ icon: FaLinkedin }}
             href={config.linkedInUrl}
+            label="LinkedIn profile"
           />
         </HStack>
       </Stack>

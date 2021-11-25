@@ -11,12 +11,14 @@ interface IconButtonProps {
   variant?: string;
   href: string;
   icon: Icon;
+  label: string;
 }
 
 export function IconButton({
   variant = 'unstyled',
   href,
   icon,
+  label,
 }: IconButtonProps) {
   return (
     <Button
@@ -25,6 +27,8 @@ export function IconButton({
       href={href}
       target="_blank"
       alignContent="center"
+      rel="noopener"
+      aria-label={label}
     >
       <Icon
         as={icon.icon}

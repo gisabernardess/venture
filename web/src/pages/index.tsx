@@ -22,7 +22,11 @@ export default function Home() {
 
   return (
     <>
-      <SEO title="Home" image="cover.png" />
+      <SEO
+        title="Home"
+        image="cover.png"
+        description="Organize your games. Play them with anyone."
+      />
       <Flex direction="column" minH="100vh">
         <Header />
         <Flex as="main" direction="column" w="100%" maxW={1200} mx="auto">
