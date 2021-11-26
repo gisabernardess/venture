@@ -18,7 +18,7 @@ import {
   Text,
   useBreakpointValue,
 } from '@chakra-ui/react';
-import { FaUserPlus } from 'react-icons/fa';
+import { FaUserPlus, FaBan } from 'react-icons/fa';
 import { AiFillDelete, AiFillEdit } from 'react-icons/ai';
 
 import { api } from '../../../services/api';
@@ -60,6 +60,14 @@ export default function Users({ users, page }: PermissionsProps) {
     refetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage]);
+
+  async function handleBanUser(userId: number) {
+    try {
+      console.log('Banned');
+    } catch (error) {
+      notification.error({ message: error.message });
+    }
+  }
 
   async function handleDelete(userId: number) {
     try {
@@ -123,6 +131,15 @@ export default function Users({ users, page }: PermissionsProps) {
                 {!isMobile && <Td>{user.role}</Td>}
                 <Td>
                   <HStack>
+                    <Button
+                      size="sm"
+                      fontSize="sm"
+                      variant="ghost"
+                      disabled={!isAdmin}
+                      onClick={() => handleBanUser(user.id)}
+                    >
+                      <Icon as={FaBan} fontSize="20" color="red.500" />
+                    </Button>
                     <NextLink href={`/dashboard/users/${user.id}`} passHref>
                       <Button
                         size="sm"

@@ -15,7 +15,7 @@ export default class CommentsController {
         text,
       });
     } catch (error) {
-      response.badRequest(error.messages.errors[0]);
+      response.badRequest(error.messages.error[0]);
     }
   }
 
